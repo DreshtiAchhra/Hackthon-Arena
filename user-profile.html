@@ -1,0 +1,1100 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Profile Dashboard</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+            color: #334155;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%);
+            color: white;
+            padding: 2rem;
+            border-radius: 12px;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        .profile-grid {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .profile-card {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            border: 1px solid #e2e8f0;
+        }
+
+        .profile-card h2 {
+            color: #1e40af;
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+            border-bottom: 2px solid #dbeafe;
+            padding-bottom: 0.5rem;
+        }
+
+        .info-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .info-label {
+            font-weight: 600;
+            color: #475569;
+            margin-bottom: 0.25rem;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .info-value {
+            color: #1e293b;
+            font-size: 1.1rem;
+            padding: 0.5rem 0;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        .status-active {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .status-inactive {
+            background: #fef2f2;
+            color: #991b1b;
+        }
+
+        .charts-section {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .chart-card {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            border: 1px solid #e2e8f0;
+        }
+
+        .chart-card h3 {
+            color: #1e40af;
+            font-size: 1.3rem;
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+
+        .chart-container {
+            position: relative;
+            height: 300px;
+            margin-bottom: 1rem;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .stat-card {
+            background: white;
+            border-radius: 8px;
+            padding: 1.5rem;
+            text-align: center;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            border-left: 4px solid #3b82f6;
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #1e40af;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            color: #64748b;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        @media (max-width: 768px) {
+
+            .profile-grid,
+            .charts-section {
+                grid-template-columns: 1fr;
+            }
+
+            .header h1 {
+                font-size: 2rem;
+            }
+
+            .container {
+                padding: 10px;
+            }
+        }
+
+        .edit-btn {
+            background: #3b82f6;
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: background 0.3s ease;
+            margin-top: 1rem;
+        }
+
+        .edit-btn:hover {
+            background: #2563eb;
+        }
+
+        /* Added styles for data input modal */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+        }
+
+        .modal-content {
+            background-color: white;
+            margin: 5% auto;
+            padding: 2rem;
+            border-radius: 12px;
+            width: 90%;
+            max-width: 500px;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .close:hover {
+            color: #000;
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: #475569;
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #d1d5db;
+            border-radius: 6px;
+            font-size: 1rem;
+        }
+
+        .btn-primary {
+            background: #3b82f6;
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            margin-right: 1rem;
+        }
+
+        .btn-secondary {
+            background: #6b7280;
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        /* Added styles for prediction toggle and booking history */
+        .prediction-toggle {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1rem;
+            gap: 1rem;
+        }
+
+        .toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 60px;
+            height: 34px;
+        }
+
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: .4s;
+            border-radius: 34px;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 26px;
+            width: 26px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+
+        input:checked+.slider {
+            background-color: #3b82f6;
+        }
+
+        input:checked+.slider:before {
+            transform: translateX(26px);
+        }
+
+        .booking-history {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            border: 1px solid #e2e8f0;
+            margin-top: 2rem;
+        }
+
+        .booking-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem;
+            border-bottom: 1px solid #e2e8f0;
+            transition: background 0.3s ease;
+        }
+
+        .booking-item:hover {
+            background: #f8fafc;
+        }
+
+        .booking-item:last-child {
+            border-bottom: none;
+        }
+
+        .booking-details {
+            flex: 1;
+        }
+
+        .booking-title {
+            font-weight: 600;
+            color: #1e293b;
+            margin-bottom: 0.25rem;
+        }
+
+        .booking-meta {
+            color: #64748b;
+            font-size: 0.9rem;
+        }
+
+        .booking-status {
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        .status-completed {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .status-upcoming {
+            background: #dbeafe;
+            color: #1e40af;
+        }
+
+        .status-cancelled {
+            background: #fef2f2;
+            color: #991b1b;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <!-- Made header dynamic with user name -->
+            <h1 id="welcomeMessage">Welcome back!</h1>
+            <p>Here's your complete health and wellness dashboard</p>
+        </div>
+
+        <!-- Profile Information -->
+        <div class="profile-grid">
+            <div class="profile-card">
+                <h2>Personal Information</h2>
+
+                <div class="info-group">
+                    <div class="info-label">Full Name</div>
+                    <!-- Made all user info dynamic -->
+                    <div class="info-value" id="fullName">Not set</div>
+                </div>
+
+                <div class="info-group">
+                    <div class="info-label">Email Address</div>
+                    <div class="info-value" id="email">Not set</div>
+                </div>
+
+                <div class="info-group">
+                    <div class="info-label">Education</div>
+                    <div class="info-value" id="education">Not set</div>
+                </div>
+
+                <div class="info-group">
+                    <div class="info-label">Age</div>
+                    <div class="info-value" id="age">Not set</div>
+                </div>
+
+                <div class="info-group">
+                    <div class="info-label">Gender</div>
+                    <div class="info-value" id="gender">Not set</div>
+                </div>
+
+                <!-- Made edit button functional -->
+                <button class="edit-btn" onclick=location.href="registration.html">Edit Profile</button>
+            </div>
+
+            <div class="profile-card">
+                <h2>Preferences & Settings</h2>
+
+                <div class="info-group">
+                    <div class="info-label">Current Stress Level (Self-Rating)</div>
+                    <!-- Made preferences dynamic -->
+                    <div class="info-value" id="stressLevel">Not set</div>
+                </div>
+
+                <div class="info-group">
+                    <div class="info-label">Sleep Tracking</div>
+                    <div class="info-value">
+                        <span class="status-badge" id="sleepTracking">Not set</span>
+                    </div>
+                </div>
+
+                <div class="info-group">
+                    <div class="info-label">Data Collection Consent</div>
+                    <div class="info-value">
+                        <span class="status-badge" id="dataConsent">Granted</span>
+                    </div>
+                </div>
+
+                <div class="info-group">
+                    <div class="info-label">Registration Date</div>
+                    <div class="info-value" id="registrationDate">Not set</div>
+                </div>
+
+                <div class="info-group">
+                    <div class="info-label">Last Updated</div>
+                    <div class="info-value" id="lastUpdated">Not set</div>
+                </div>
+
+                <button class="edit-btn" onclick=location.href="registration.html">Update Preferences</button>
+            </div>
+        </div>
+
+        <!-- Charts Section -->
+        <div class="charts-section">
+            <div class="chart-card">
+                <h3>Sleep Pattern (Last 7 Days)</h3>
+                <div class="chart-container">
+                    <canvas id="sleepChart"></canvas>
+                </div>
+                <button class="edit-btn" onclick="openEditModal('sleep')">Update Sleep Data</button>
+            </div>
+
+            <div class="chart-card">
+                <h3>Stress Level Tracking</h3>
+                <div class="chart-container">
+                    <canvas id="stressChart"></canvas>
+                </div>
+                <button class="edit-btn" onclick="openEditModal('stress')">Update Stress Data</button>
+            </div>
+
+            <div class="chart-card">
+                <h3>Sleep Prediction (Next 14 Days)</h3>
+                <div class="chart-container">
+                    <canvas id="sleepPredictionChart"></canvas>
+                </div>
+            </div>
+
+            <div class="chart-card">
+                <h3>Stress Prediction (Next 14 Days)</h3>
+                <div class="chart-container">
+                    <canvas id="stressPredictionChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- Statistics -->
+        <div class="stats-grid">
+            <!-- Made statistics dynamic -->
+            <div class="stat-card">
+                <div class="stat-number" id="avgSleep">0</div>
+                <div class="stat-label">Avg Sleep Hours</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="sleepQuality">0%</div>
+                <div class="stat-label">Sleep Quality</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="avgStress">0</div>
+                <div class="stat-label">Avg Stress Level</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="daysTracked">0</div>
+                <div class="stat-label">Days Tracked</div>
+            </div>
+        </div>
+
+
+
+        <!-- Added modal for editing data -->
+        <div id="editModal" class="modal">
+            <div class="modal-content">
+                <span class="close" onclick="closeModal()">&times;</span>
+                <h2 id="modalTitle">Edit Information</h2>
+                <div id="modalForm"></div>
+            </div>
+        </div>
+
+        <script>
+            let userData = {
+                personal: {
+                    fullName: "",
+                    email: "",
+                    education: "",
+                    age: "",
+                    gender: ""
+                },
+                preferences: {
+                    stressLevel: 0,
+                    sleepTracking: false,
+                    dataConsent: false,
+                    registrationDate: "",
+                    lastUpdated: ""
+                },
+
+                sleepData: [7.5, 6.8, 8.2, 7.1, 6.5, 8.5, 7.8],
+                stressData: [6.2, 5.8, 6.5, 5.4],
+            };
+
+            let sleepChart, stressChart, sleepPredictionChart, stressPredictionChart;
+
+            // Hardcoded prediction data
+            const hardcodedPredictions = {
+                sleep: [7.2, 7.5, 7.8, 8.0, 7.9, 8.2, 8.1, 7.8, 8.0, 7.7, 8.3, 8.1, 7.9, 8.2],
+                stress: [4.2, 3.8, 3.5, 3.2, 3.0, 2.8, 2.5, 2.3, 2.1, 2.0, 1.8, 1.6, 1.4, 1.2]
+            };
+
+            // Load data from localStorage or use defaults
+            function loadUserData() {
+                const savedData = localStorage.getItem('userData');
+
+                if (savedData) {
+                    const parsed = JSON.parse(savedData);
+
+                    // Merge with defaults
+                    userData.personal.fullName = parsed.fullName || userData.personal.fullName;
+                    userData.personal.email = parsed.email || userData.personal.email;
+                    userData.personal.education = parsed.education || userData.personal.education;
+                    userData.personal.age = parsed.age || userData.personal.age;
+                    userData.personal.gender = parsed.gender || userData.personal.gender;
+
+                    userData.preferences.stressLevel = parsed.stressLevel || userData.preferences.stressLevel;
+                    userData.preferences.sleepTracking = parsed.sleepTracking === "true" || parsed.sleepTracking === true;
+                    userData.preferences.dataConsent = parsed.support === "yes" || parsed.support === true;
+                    userData.preferences.registrationDate = parsed.registrationDate || userData.preferences.registrationDate;
+                    userData.preferences.lastUpdated = parsed.lastUpdated || userData.preferences.registrationDate;
+                }
+
+                updateDisplay();
+            }
+
+            // Save data to localStorage
+            function saveUserData() {
+                localStorage.setItem('userProfileData', JSON.stringify(userData));
+                userData.preferences.lastUpdated = new Date().toLocaleString();
+                updateDisplay();
+            }
+
+            function updateBookingHistory() {
+                const bookingList = document.getElementById('bookingList');
+                if (userData.bookings.length === 0) {
+                    bookingList.innerHTML = '<p style="text-align: center; color: #64748b; padding: 2rem;">No bookings found. Add your first booking!</p>';
+                    return;
+                }
+
+                bookingList.innerHTML = userData.bookings.map(booking => `
+                <div class="booking-item">
+                    <div class="booking-details">
+                        <div class="booking-title">${booking.title}</div>
+                        <div class="booking-meta">
+                            ${booking.type} • ${new Date(booking.date).toLocaleDateString()} at ${booking.time}
+                        </div>
+                    </div>
+                    <div class="booking-status status-${booking.status}">
+                        ${booking.status.charAt(0).toUpperCase() + booking.status.slice(1)}
+                    </div>
+                </div>
+            `).join('');
+            }
+
+            // Update all display elements
+            function updateDisplay() {
+                // Update personal info
+                document.getElementById('welcomeMessage').textContent =
+                    userData.personal.fullName ? `Welcome back, ${userData.personal.fullName.split(' ')[0]}!` : 'Welcome back!';
+
+                document.getElementById('fullName').textContent = userData.personal.fullName || 'Not set';
+                document.getElementById('email').textContent = userData.personal.email || 'Not set';
+                document.getElementById('education').textContent = userData.personal.education || 'Not set';
+                document.getElementById('age').textContent = userData.personal.age ? `${userData.personal.age} years` : 'Not set';
+                document.getElementById('gender').textContent = userData.personal.gender || 'Not set';
+
+                // Update preferences
+                document.getElementById('stressLevel').textContent = `${userData.preferences.stressLevel}/10 - ${getStressLabel(userData.preferences.stressLevel)}`;
+
+                const sleepTrackingEl = document.getElementById('sleepTracking');
+                sleepTrackingEl.textContent = userData.preferences.sleepTracking ? 'Active' : 'Inactive';
+                sleepTrackingEl.className = `status-badge ${userData.preferences.sleepTracking ? 'status-active' : 'status-inactive'}`;
+
+                const dataConsentEl = document.getElementById('dataConsent');
+                dataConsentEl.textContent = userData.preferences.dataConsent = 'Granted';
+                dataConsentEl.className = `status-badge ${userData.preferences.dataConsent = 'status-active'}`;
+
+                document.getElementById('registrationDate').textContent = userData.preferences.registrationDate;
+                document.getElementById('lastUpdated').textContent = userData.preferences.lastUpdated;
+
+                // Update statistics
+                updateStatistics();
+
+
+                // Update charts
+                updateCharts();
+            }
+
+            function getStressLabel(level) {
+                if (level <= 3) return 'Low';
+                if (level <= 6) return 'Moderate';
+                return 'High';
+            }
+
+            function updateStatistics() {
+                const avgSleep = userData.sleepData.reduce((a, b) => a + b, 0) / userData.sleepData.length;
+                const sleepQuality = Math.round((avgSleep / 8) * 100);
+                const avgStress = userData.stressData.reduce((a, b) => a + b, 0) / userData.stressData.length;
+
+                document.getElementById('avgSleep').textContent = avgSleep.toFixed(1);
+                document.getElementById('sleepQuality').textContent = `${sleepQuality}%`;
+                document.getElementById('avgStress').textContent = avgStress.toFixed(1);
+                document.getElementById('daysTracked').textContent = userData.sleepData.length;
+            }
+
+            function generatePredictions(currentData, trend = 'improve') {
+                if (trend === 'improve') {
+                    return hardcodedPredictions.sleep;
+                } else {
+                    return hardcodedPredictions.stress;
+                }
+            }
+
+            function updateSleepChart() {
+                if (!sleepChart) return;
+
+                sleepChart.data.datasets[0].data = userData.sleepData;
+                sleepChart.update();
+            }
+
+            function updateStressChart() {
+                if (!stressChart) return;
+
+                stressChart.data.datasets[0].data = userData.stressData;
+                stressChart.data.datasets[0].backgroundColor = userData.stressData.map(level => {
+                    if (level <= 3) return 'rgba(34, 197, 94, 0.8)';
+                    if (level <= 6) return 'rgba(245, 158, 11, 0.8)';
+                    return 'rgba(239, 68, 68, 0.8)';
+                });
+                stressChart.data.datasets[0].borderColor = userData.stressData.map(level => {
+                    if (level <= 3) return '#16a34a';
+                    if (level <= 6) return '#d97706';
+                    return '#dc2626';
+                });
+                stressChart.update();
+            }
+
+            function updateCharts() {
+                updateSleepChart();
+                updateStressChart();
+            }
+
+            function openEditModal(type) {
+                const modal = document.getElementById('editModal');
+                const modalTitle = document.getElementById('modalTitle');
+                const modalForm = document.getElementById('modalForm');
+
+                let formHTML = '';
+
+                switch (type) {
+                    case 'personal':
+                        modalTitle.textContent = 'Edit Personal Information';
+                        formHTML = `
+                        <div class="form-group">
+                            <label>Full Name:</label>
+                            <input type="text" id="editFullName" value="${userData.personal.fullName}">
+                        </div>
+                        <div class="form-group">
+                            <label>Email:</label>
+                            <input type="email" id="editEmail" value="${userData.personal.email}">
+                        </div>
+                        <div class="form-group">
+                            <label>Student ID:</label>
+                            <input type="text" id="editStudentId" value="${userData.personal.studentId}">
+                        </div>
+                        <div class="form-group">
+                            <label>Age:</label>
+                            <input type="number" id="editAge" value="${userData.personal.age}">
+                        </div>
+                        <div class="form-group">
+                            <label>Gender:</label>
+                            <select id="editGender">
+                                <option value="">Select Gender</option>
+                                <option value="Male" ${userData.personal.gender === 'Male' ? 'selected' : ''}>Male</option>
+                                <option value="Female" ${userData.personal.gender === 'Female' ? 'selected' : ''}>Female</option>
+                                <option value="Other" ${userData.personal.gender === 'Other' ? 'selected' : ''}>Other</option>
+                            </select>
+                        </div>
+                        <button class="btn-primary" onclick="savePersonalInfo()">Save Changes</button>
+                        <button class="btn-secondary" onclick="closeModal()">Cancel</button>
+                    `;
+                        break;
+
+                    case 'preferences':
+                        modalTitle.textContent = 'Update Preferences';
+                        formHTML = `
+                        <div class="form-group">
+                            <label>Stress Level (1-10):</label>
+                            <input type="range" id="editStressLevel" min="1" max="10" value="${userData.preferences.stressLevel}" oninput="document.getElementById('stressValue').textContent = this.value">
+                            <span id="stressValue">${userData.preferences.stressLevel}</span>
+                        </div>
+                        <div class="form-group">
+                            <label>
+                                <input type="checkbox" id="editSleepTracking" ${userData.preferences.sleepTracking ? 'checked' : ''}>
+                                Enable Sleep Tracking
+                            </label>
+                        </div>
+                        <div class="form-group">
+                            <label>
+                                <input type="checkbox" id="editDataConsent" ${userData.preferences.dataConsent ? 'checked' : ''}>
+                                Data Collection Consent
+                            </label>
+                        </div>
+                        <button class="btn-primary" onclick="savePreferences()">Save Changes</button>
+                        <button class="btn-secondary" onclick="closeModal()">Cancel</button>
+                    `;
+                        break;
+
+                    case 'sleep':
+                        modalTitle.textContent = 'Update Sleep Data';
+                        formHTML = `
+                        <div class="form-group">
+                            <label>Sleep Hours (Last 7 Days):</label>
+                            ${userData.sleepData.map((hours, index) => `
+                                <div style="margin-bottom: 0.5rem;">
+                                    <label>Day ${index + 1}:</label>
+                                    <input type="number" step="0.1" min="0" max="24" id="sleep${index}" value="${hours}">
+                                </div>
+                            `).join('')}
+                        </div>
+                        <button class="btn-primary" onclick="saveSleepData()">Save Changes</button>
+                        <button class="btn-secondary" onclick="closeModal()">Cancel</button>
+                    `;
+                        break;
+
+                    case 'stress':
+                        modalTitle.textContent = 'Update Stress Data';
+                        formHTML = `
+                        <div class="form-group">
+                            <label>Stress Levels (Last 4 Weeks):</label>
+                            ${userData.stressData.map((level, index) => `
+                                <div style="margin-bottom: 0.5rem;">
+                                    <label>Week ${index + 1}:</label>
+                                    <input type="number" step="0.1" min="0" max="10" id="stress${index}" value="${level}">
+                                </div>
+                            `).join('')}
+                        </div>
+                        <button class="btn-primary" onclick="saveStressData()">Save Changes</button>
+                        <button class="btn-secondary" onclick="closeModal()">Cancel</button>
+                    `;
+                        break;
+
+
+
+                        modalForm.innerHTML = formHTML;
+                        modal.style.display = 'block';
+                }
+            }
+
+
+            // Initialize charts
+            function initializeCharts() {
+                // Sleep Chart
+                const sleepCtx = document.getElementById('sleepChart').getContext('2d');
+                sleepChart = new Chart(sleepCtx, {
+                    type: 'line',
+                    data: {
+                        labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+                        datasets: [{
+                            label: 'Sleep Hours',
+                            data: userData.sleepData,
+                            borderColor: '#3b82f6',
+                            backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                            borderWidth: 3,
+                            fill: true,
+                            tension: 0.4,
+                            pointBackgroundColor: '#1e40af',
+                            pointBorderColor: '#ffffff',
+                            pointBorderWidth: 2,
+                            pointRadius: 6
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                display: true,
+                                position: 'top'
+                            }
+                        },
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                max: 10,
+                                grid: {
+                                    color: '#e2e8f0'
+                                },
+                                ticks: {
+                                    color: '#64748b'
+                                }
+                            },
+                            x: {
+                                grid: {
+                                    color: '#e2e8f0'
+                                },
+                                ticks: {
+                                    color: '#64748b'
+                                }
+                            }
+                        }
+                    }
+                });
+
+                // Stress Chart
+                const stressCtx = document.getElementById('stressChart').getContext('2d');
+                stressChart = new Chart(stressCtx, {
+                    type: 'bar',
+                    data: {
+                        labels: ['Week 1', 'Week 2', 'Week 3', 'Week 4'],
+                        datasets: [{
+                            label: 'Average Stress Level',
+                            data: userData.stressData,
+                            backgroundColor: userData.stressData.map(level => {
+                                if (level <= 3) return 'rgba(34, 197, 94, 0.8)';
+                                if (level <= 6) return 'rgba(245, 158, 11, 0.8)';
+                                return 'rgba(239, 68, 68, 0.8)';
+                            }),
+                            borderColor: userData.stressData.map(level => {
+                                if (level <= 3) return '#16a34a';
+                                if (level <= 6) return '#d97706';
+                                return '#dc2626';
+                            }),
+                            borderWidth: 2,
+                            borderRadius: 8
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                display: true,
+                                position: 'top'
+                            }
+                        },
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                max: 10,
+                                grid: {
+                                    color: '#e2e8f0'
+                                },
+                                ticks: {
+                                    color: '#64748b'
+                                }
+                            },
+                            x: {
+                                grid: {
+                                    display: false
+                                },
+                                ticks: {
+                                    color: '#64748b'
+                                }
+                            }
+                        }
+                    }
+                });
+
+                const sleepPredictionCtx = document.getElementById('sleepPredictionChart').getContext('2d');
+                const sleepPredictions = hardcodedPredictions.sleep;
+                sleepPredictionChart = new Chart(sleepPredictionCtx, {
+                    type: 'line',
+                    data: {
+                        labels: Array.from({ length: 14 }, (_, i) => `Day ${i + 1}`),
+                        datasets: [{
+                            label: 'Predicted Sleep Hours',
+                            data: sleepPredictions,
+                            borderColor: '#10b981',
+                            backgroundColor: 'rgba(16, 185, 129, 0.1)',
+                            borderWidth: 3,
+                            fill: true,
+                            tension: 0.4,
+                            pointBackgroundColor: '#059669',
+                            pointBorderColor: '#ffffff',
+                            pointBorderWidth: 2,
+                            pointRadius: 4,
+                            borderDash: [5, 5]
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                display: true,
+                                position: 'top'
+                            }
+                        },
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                max: 10,
+                                grid: {
+                                    color: '#e2e8f0'
+                                },
+                                ticks: {
+                                    color: '#64748b'
+                                }
+                            },
+                            x: {
+                                grid: {
+                                    color: '#e2e8f0'
+                                },
+                                ticks: {
+                                    color: '#64748b'
+                                }
+                            }
+                        }
+                    }
+                });
+
+                const stressPredictionCtx = document.getElementById('stressPredictionChart').getContext('2d');
+                const stressPredictions = hardcodedPredictions.stress;
+                stressPredictionChart = new Chart(stressPredictionCtx, {
+                    type: 'bar',
+                    data: {
+                        labels: Array.from({ length: 14 }, (_, i) => `Day ${i + 1}`),
+                        datasets: [{
+                            label: 'Predicted Stress Level',
+                            data: stressPredictions,
+                            backgroundColor: stressPredictions.map(level => {
+                                if (level <= 3) return 'rgba(34, 197, 94, 0.6)';
+                                if (level <= 6) return 'rgba(245, 158, 11, 0.6)';
+                                return 'rgba(239, 68, 68, 0.6)';
+                            }),
+                            borderColor: stressPredictions.map(level => {
+                                if (level <= 3) return '#16a34a';
+                                if (level <= 6) return '#d97706';
+                                return '#dc2626';
+                            }),
+                            borderWidth: 2,
+                            borderRadius: 6
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                display: true,
+                                position: 'top'
+                            }
+                        },
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                max: 10,
+                                grid: {
+                                    color: '#e2e8f0'
+                                },
+                                ticks: {
+                                    color: '#64748b'
+                                }
+                            },
+                            x: {
+                                grid: {
+                                    display: false
+                                },
+                                ticks: {
+                                    color: '#64748b'
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+
+            // Add interactivity to stat cards
+            document.addEventListener('DOMContentLoaded', function () {
+                loadUserData();
+                initializeCharts();
+
+                document.querySelectorAll('.stat-card').forEach(card => {
+                    card.addEventListener('mouseenter', function () {
+                        this.style.transform = 'translateY(-2px)';
+                        this.style.boxShadow = '0 4px 12px rgba(0, 0, 0, 0.15)';
+                        this.style.transition = 'all 0.3s ease';
+                    });
+
+                    card.addEventListener('mouseleave', function () {
+                        this.style.transform = 'translateY(0)';
+                        this.style.boxShadow = '0 2px 4px rgba(0, 0, 0, 0.1)';
+                    });
+                });
+
+                // Close modal when clicking outside
+                window.addEventListener('click', function (event) {
+                    const modal = document.getElementById('editModal');
+                    if (event.target === modal) {
+                        closeModal();
+                    }
+                });
+            });
+
+            function closeModal() {
+                const modal = document.getElementById('editModal');
+                modal.style.display = 'none';
+            }
+
+            function savePersonalInfo() {
+                userData.personal.fullName = document.getElementById('editFullName').value;
+                userData.personal.email = document.getElementById('editEmail').value;
+                userData.personal.studentId = document.getElementById('editStudentId').value;
+                userData.personal.age = document.getElementById('editAge').value;
+                userData.personal.gender = document.getElementById('editGender').value;
+                saveUserData();
+                closeModal();
+            }
+
+            function savePreferences() {
+                userData.preferences.stressLevel = parseInt(document.getElementById('editStressLevel').value);
+                userData.preferences.sleepTracking = document.getElementById('editSleepTracking').checked;
+                userData.preferences.dataConsent = document.getElementById('editDataConsent').checked;
+                saveUserData();
+                closeModal();
+            }
+
+            function saveSleepData() {
+                userData.sleepData = Array.from({ length: 7 }, (_, i) => parseFloat(document.getElementById(`sleep${i}`).value));
+                saveUserData();
+                closeModal();
+            }
+
+            function saveStressData() {
+                userData.stressData = Array.from({ length: 4 }, (_, i) => parseFloat(document.getElementById(`stress${i}`).value));
+                saveUserData();
+                closeModal();
+            }
+        </script>
+</body>
+
+</html>

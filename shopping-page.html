@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gaming Rewards Shop</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+            min-height: 100vh;
+            color: #334155;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%);
+            color: white;
+            padding: 2rem 0;
+            text-align: center;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        .credits-display {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 1rem 2rem;
+            border-radius: 50px;
+            display: inline-block;
+            margin-top: 1rem;
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        /*  Changed from grid to list layout */
+        .shop-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        /*  Modified item card for horizontal list layout */
+        .item-card {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+        }
+
+        .item-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px -3px rgba(0, 0, 0, 0.1);
+            border-color: #3b82f6;
+        }
+
+        .item-card.disabled {
+            opacity: 0.6;
+            background: #f1f5f9;
+            transform: none;
+            border-color: #e2e8f0;
+        }
+
+        .item-card.disabled:hover {
+            transform: none;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            border-color: #e2e8f0;
+        }
+
+        /*  Smaller image for list layout */
+        .item-image {
+            width: 80px;
+            height: 80px;
+            background: #e2e8f0;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            flex-shrink: 0;
+        }
+
+        /*  Content area for item details */
+        .item-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .item-name {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #1e293b;
+        }
+
+        .item-description {
+            color: #64748b;
+            font-size: 0.85rem;
+            line-height: 1.4;
+        }
+
+        .item-category {
+            color: #3b82f6;
+            font-size: 0.75rem;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /*  Right side for price and button */
+        .item-actions {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 0.75rem;
+            min-width: 150px;
+        }
+
+        .credit-cost {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: #1e40af;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .credit-icon {
+            width: 20px;
+            height: 20px;
+            background: #fbbf24;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.7rem;
+        }
+
+        .buy-button {
+            padding: 0.5rem 1.25rem;
+            background: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+        }
+
+        .buy-button:hover {
+            background: linear-gradient(135deg, #1e3a8a 0%, #2563eb 100%);
+            transform: translateY(-1px);
+        }
+
+        .buy-button:disabled {
+            background: #94a3b8;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .buy-button:disabled:hover {
+            background: #94a3b8;
+            transform: none;
+        }
+
+        .insufficient-credits {
+            color: #ef4444;
+            font-size: 0.75rem;
+            text-align: right;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .container {
+                padding: 1rem;
+            }
+            
+            .item-card {
+                flex-direction: column;
+                text-align: center;
+                gap: 1rem;
+            }
+            
+            .item-actions {
+                align-items: center;
+                min-width: auto;
+            }
+            
+            .insufficient-credits {
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <h1>Gaming Rewards Shop</h1>
+        <p>Spend your hard-earned credits on amazing rewards!</p>
+        <div class="credits-display">
+            <span class="credit-icon">💎</span>
+            Your Credits: <span id="userCredits">1250</span>
+        </div>
+    </header>
+
+    <div class="container">
+        <!--  Changed from shop-grid to shop-list -->
+        <div class="shop-list" id="shopList">
+            <!-- Items will be populated by JavaScript -->
+        </div>
+    </div>
+
+    <script>
+        //  Expanded shop items array with more items
+        const shopItems = [
+            {
+                id: 1,
+                name: "Gaming Headset Pro",
+                description: "Premium wireless gaming headset with 7.1 surround sound and noise cancellation",
+                cost: 800,
+                image: "🎧",
+                category: "Gaming Gear"
+            },
+            {
+                id: 2,
+                name: "Mechanical Keyboard RGB",
+                description: "RGB backlit mechanical keyboard with blue switches and programmable keys",
+                cost: 1200,
+                image: "⌨️",
+                category: "Gaming Gear"
+            },
+            {
+                id: 3,
+                name: "Gaming Mouse Pro",
+                description: "High-precision gaming mouse with customizable DPI up to 16,000",
+                cost: 600,
+                image: "🖱️",
+                category: "Gaming Gear"
+            },
+            {
+                id: 4,
+                name: "Steam Gift Card $25",
+                description: "Steam digital gift card worth $25 for purchasing your favorite games",
+                cost: 2500,
+                image: "🎁",
+                category: "Gift Cards"
+            },
+            {
+                id: 5,
+                name: "Gaming Chair Elite",
+                description: "Ergonomic gaming chair with lumbar support and adjustable armrests",
+                cost: 3000,
+                image: "🪑",
+                category: "Furniture"
+            },
+            {
+                id: 6,
+                name: "HD Webcam 1080p",
+                description: "1080p HD webcam perfect for streaming with auto-focus technology",
+                cost: 400,
+                image: "📹",
+                category: "Streaming"
+            },
+            {
+                id: 7,
+                name: "Premium Phone Case",
+                description: "Military-grade protective case for smartphones with wireless charging support",
+                cost: 200,
+                image: "📱",
+                category: "Accessories"
+            },
+            {
+                id: 8,
+                name: "Bluetooth Speaker",
+                description: "Portable wireless speaker with 360-degree sound and 12-hour battery",
+                cost: 900,
+                image: "🔊",
+                category: "Audio"
+            },
+            {
+                id: 9,
+                name: "Gaming Monitor 27\"",
+                description: "27-inch 144Hz gaming monitor with 1ms response time and G-Sync",
+                cost: 4500,
+                image: "🖥️",
+                category: "Displays"
+            },
+            {
+                id: 10,
+                name: "Wireless Earbuds",
+                description: "True wireless earbuds with active noise cancellation and 8-hour battery",
+                cost: 750,
+                image: "🎵",
+                category: "Audio"
+            },
+            {
+                id: 11,
+                name: "Gaming Mousepad XL",
+                description: "Extra-large gaming mousepad with RGB lighting and smooth surface",
+                cost: 300,
+                image: "🖱️",
+                category: "Gaming Gear"
+            },
+            {
+                id: 12,
+                name: "PlayStation Gift Card $50",
+                description: "PlayStation Store digital gift card worth $50 for games and content",
+                cost: 5000,
+                image: "🎮",
+                category: "Gift Cards"
+            },
+            {
+                id: 13,
+                name: "USB-C Hub",
+                description: "7-in-1 USB-C hub with HDMI, USB 3.0, and fast charging support",
+                cost: 450,
+                image: "🔌",
+                category: "Accessories"
+            },
+            {
+                id: 14,
+                name: "Gaming Desk",
+                description: "Spacious gaming desk with cable management and RGB lighting strips",
+                cost: 3500,
+                image: "🪑",
+                category: "Furniture"
+            },
+            {
+                id: 15,
+                name: "VR Headset",
+                description: "Virtual reality headset with 4K display and wireless connectivity",
+                cost: 8000,
+                image: "🥽",
+                category: "VR/AR"
+            },
+            {
+                id: 16,
+                name: "Streaming Microphone",
+                description: "Professional USB microphone with pop filter and boom arm",
+                cost: 650,
+                image: "🎤",
+                category: "Streaming"
+            },
+            {
+                id: 17,
+                name: "Portable SSD 1TB",
+                description: "Ultra-fast portable SSD with 1TB storage and USB-C connectivity",
+                cost: 1100,
+                image: "💾",
+                category: "Storage"
+            },
+            {
+                id: 18,
+                name: "Gaming Glasses",
+                description: "Blue light blocking glasses designed for extended gaming sessions",
+                cost: 250,
+                image: "👓",
+                category: "Health"
+            }
+        ];
+
+        let userCredits = 1250;
+
+        function updateCreditsDisplay() {
+            document.getElementById('userCredits').textContent = userCredits;
+        }
+
+        //  Updated createItemCard for list layout
+        function createItemCard(item) {
+            const canAfford = userCredits >= item.cost;
+            
+            return `
+                <div class="item-card ${!canAfford ? 'disabled' : ''}">
+                    <div class="item-image">
+                        ${item.image}
+                    </div>
+                    <div class="item-content">
+                        <div class="item-category">${item.category}</div>
+                        <h3 class="item-name">${item.name}</h3>
+                        <p class="item-description">${item.description}</p>
+                    </div>
+                    <div class="item-actions">
+                        <div class="credit-cost">
+                            <span class="credit-icon">💎</span>
+                            ${item.cost}
+                        </div>
+                        <button 
+                            class="buy-button" 
+                            ${!canAfford ? 'disabled' : ''}
+                            onclick="buyItem(${item.id}, ${item.cost})"
+                        >
+                            ${canAfford ? 'Buy Now' : 'Not Enough Credits'}
+                        </button>
+                        ${!canAfford ? '<div class="insufficient-credits">Need ' + (item.cost - userCredits) + ' more</div>' : ''}
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderShop() {
+            //  Updated to use shopList instead of shopGrid
+            const shopList = document.getElementById('shopList');
+            shopList.innerHTML = shopItems.map(item => createItemCard(item)).join('');
+        }
+
+        function buyItem(itemId, cost) {
+            if (userCredits >= cost) {
+                userCredits -= cost;
+                updateCreditsDisplay();
+                
+                // Show success message
+                const item = shopItems.find(i => i.id === itemId);
+                alert(`🎉 Congratulations! You've successfully purchased ${item.name}!`);
+                
+                // Re-render shop to update disabled states
+                renderShop();
+            } else {
+                alert('❌ Insufficient credits! Play more games to earn credits.');
+            }
+        }
+
+        // Initialize the shop
+        document.addEventListener('DOMContentLoaded', function() {
+            updateCreditsDisplay();
+            renderShop();
+        });
+
+        // Add some demo functionality to earn credits (for testing)
+        document.addEventListener('keydown', function(e) {
+            if (e.key === '+') {
+                userCredits += 100;
+                updateCreditsDisplay();
+                renderShop();
+                console.log('Added 100 credits! (Press + to add more)');
+            }
+        });
+    </script>
+</body>
+</html>

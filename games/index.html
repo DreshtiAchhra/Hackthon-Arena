@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sleep Quest</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <canvas id="stars"></canvas>
+    <div class="screen start-screen active" id="startScreen">
+    <h1>Sleep Quest </h1>
+    <p>Help your little <br>friend drift into peaceful sleep</p>
+    <button id="startBtn">Start</button>
+  </div>
+  <div class="screen" id="breathScreen" aria-hidden="true">
+    <div class="task">
+      <h2>Breathing Exercise </h2>
+      <div class="breath-area">
+        <div id="breathCircle" class="circle"></div>
+        <div id="breathLabel" class="breath-label">Inhale</div>
+      </div>
+      <div class="small">Follow the circle. 3 cycles to complete.</div>
+        <div class="controls" style="display:flex; justify-content:flex-end;">
+  <button id="breathSkip" type="button">Skip</button>
+</div>
+
+      </div>
+      <div class="progress" id="breathProgress">0 / 3</div>
+    </div>
+  </div>
+
+
+  <div class="screen" id="soundScreen" aria-hidden="true">
+    <div class="task">
+      <h2>Calming Sounds 🎵</h2>
+      <p>Choose a soundscape (preview on hover / click)</p>
+      <div class="sound-list">
+        <button class="sound-btn" data-sound="sound1">🌧 Rain</button>
+      <button class="sound-btn" data-sound="sound2">🌊 Waves</button>
+      <button class="sound-btn" data-sound="sound3">🌲 Forest</button>
+      <button class="sound-btn" data-sound="sound4">🔥 Fire</button>
+      </div>
+      <audio id="sound1" src="sounds/rain.mp3" loop></audio>
+    <audio id="sound2" src="sounds/waves.mp3" loop></audio>
+    <audio id="sound3" src="sounds/forest.mp3" loop></audio>
+    <audio id="sound4" src="sounds/fire.mp3" loop></audio>
+      <div class="sound-controls">
+        <button id="soundNext">Next</button>
+      </div>
+      <div class="avatar" id="avatar"></div>
+    </div>
+  </div>
+
+
+
+
+  <div class="screen" id="bubbleScreen" aria-hidden="true">
+    <div class="task">
+      <h2>Bubble Wrap — Positive Words 🫧</h2>
+      <p>Pop bubbles to reveal positive words.</p>
+      <div id="bubbleGrid" class="bubble-grid"></div>
+      <div id="bubbleMessage" class="bubble-message"></div>
+      <div class="controls">
+        <button id="bubbleNext">Finish</button>
+      </div>
+    </div>
+  </div>
+
+
+  <div class="screen" id="goodnightScreen" aria-hidden="true">
+    <div class="task center">
+      <h2>Goodnight ✨</h2>
+      <div class="avatar-sleep" id="avatarFinal">😴</div>
+      <p>Sweet dreams — your Dream Scene unlocked!</p>
+      <button id="toRewards">See Dream Scene</button>
+    </div>
+  </div>
+
+
+  <div class="screen" id="rewardsScreen" aria-hidden="true">
+    <div class="task center">
+      <h2>Dream Scene Unlocked 🌌</h2>
+      <div id="dreamCanvas" class="dream"></div>
+      <p id="rewardText"></p>
+      <div class="streak">Streak: <span id="streakCount">0</span> nights</div>
+      <div class="controls">
+        <button id="backToStart">Back to Start</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+
+</body>
+</html>

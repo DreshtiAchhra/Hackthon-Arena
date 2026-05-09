@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Updated title to use mindHeaven branding -->
+    <title>About Us - mindHeaven</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'sans-serif';
+            line-height: 1.6;
+            color: #333;
+            background-color: #f8fafc;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        header {
+            /* <!-- Updated gradient to blue and grey color scheme --> */
+            background: #4a90e2;
+            color: white;
+            padding: 60px 0;
+            text-align: center;
+        }
+
+        header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        header p {
+            font-size: 1.5rem;
+            opacity: 0.9;
+        }
+
+        .section {
+            padding: 60px 0;
+
+        }
+
+        .section:nth-child(even) {
+            background-color: white;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 2.2rem;
+            margin-bottom: 50px;
+            color: #374151;
+            position: relative;
+        }
+
+        .section-title::after {
+            content: '';
+            display: block;
+            width: 60px;
+            height: 4px;
+            /* <!-- Updated accent color to blue --> */
+            background: #3b82f6;
+            margin: 20px auto;
+            border-radius: 2px;
+        }
+
+        .project-overview {
+            max-width: 800px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .project-overview p {
+            font-size: 1.1rem;
+            margin-bottom: 20px;
+            color: #4b5563;
+        }
+
+        .team-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+            margin-top: 40px;
+
+        }
+
+        .team-card {
+            background: white;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            border-radius: 12px;
+            height: 350px;
+            padding: 30px;
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .team-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        .team-photo {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            /* <!-- Updated team photo gradient to blue and grey --> */
+            background: linear-gradient(135deg, #3b82f6, #6b7280);
+            margin: 0 auto 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            color: white;
+            font-weight: bold;
+        }
+
+        .team-name {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #374151;
+        }
+
+        .team-role {
+            /* <!-- Updated role color to blue --> */
+            color: #3b82f6;
+            font-weight: 500;
+            margin-bottom: 15px;
+        }
+
+        .team-skills {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            justify-content: center;
+        }
+
+        .skill-tag {
+            /* <!-- Updated skill tag colors to grey tones --> */
+            background: #e5e7eb;
+            color: #4b5563;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+        }
+
+        .usp-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-top: 40px;
+        }
+
+        .usp-item {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            /* <!-- Updated border color to blue --> */
+            border-left: 4px solid #3b82f6;
+        }
+
+        .usp-icon {
+            width: 50px;
+            height: 50px;
+            /* <!-- Updated icon background to blue --> */
+            background: #3b82f6;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 20px;
+            color: white;
+            font-size: 1.5rem;
+        }
+
+        .usp-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: #374151;
+        }
+
+        .usp-description {
+            color: #4b5563;
+            line-height: 1.6;
+        }
+
+        .contact-section {
+            /* <!-- Updated contact section background to dark grey --> */
+            background: #374151;
+            color: white;
+            text-align: center;
+        }
+
+        .contact-section .section-title {
+            color: white;
+        }
+
+        .contact-section .section-title::after {
+            /* <!-- Updated accent color to blue --> */
+            background: #3b82f6;
+        }
+
+        .contact-info {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            flex-wrap: wrap;
+            margin-top: 30px;
+        }
+
+        .contact-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .contact-item a {
+            /* <!-- Updated link color to blue --> */
+            color: #60a5fa;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .contact-item a:hover {
+            /* <!-- Updated hover color to lighter blue --> */
+            color: #93c5fd;
+        }
+
+        @media (max-width: 768px) {
+            header h1 {
+                font-size: 2rem;
+            }
+
+            .section-title {
+                font-size: 1.8rem;
+            }
+
+            .team-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .contact-info {
+                flex-direction: column;
+                gap: 20px;
+            }
+        }
+
+        .div1 {
+            background-color: #93c5fd;
+            height: 900px;
+        }
+
+        ::-webkit-scrollbar {
+            width: 4px;
+            /* Width of the scrollbar */
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <div class="container">
+            <!-- Updated branding to mindHeaven -->
+
+
+            <h2>MindHeaven</h2>
+
+
+            <p>Empowering student mental health through innovative digital solutions</p>
+
+        </div>
+    </header>
+
+    <section class="section">
+        <div class="container">
+            <h2 class="section-title">Our Mission</h2>
+            <div class="project-overview">
+                <p>
+                    Our platform revolutionizes mental health support for students in higher education by providing
+                    comprehensive digital psychological support systems. We monitor student wellness patterns and
+                    deliver actionable insights to improve mental health, stress management, and overall well-being.
+                </p>
+                <p>
+                    Using AI-powered predictions and real-time analytics, we help both students and administrators
+                    take preventive actions, creating a supportive environment where every student can thrive
+                    academically and personally.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <section class="section">
+        <div class="container">
+            <h2 class="section-title">Unique Selling Points</h2>
+            <div class="usp-grid">
+                <div class="usp-item">
+                    <div class="usp-icon">💡</div>
+                    <h3 class="usp-title">Joyful Activities</h3>
+                    <p class="usp-description">Our platform offers interactive and engaging games designed to reduce
+                        stress,improve focus and boost positivity.</p>
+                </div>
+                <div class="usp-item">
+                    <div class="usp-icon">📊</div>
+                    <h3 class="usp-title">Real-Time Analytics</h3>
+                    <p class="usp-description">Monitor student wellness patterns and receive actionable insights to
+                        improve mental health.</p>
+                </div>
+                <div class="usp-item">
+                    <div class="usp-icon">🤝</div>
+                    <h3 class="usp-title">Supportive Community</h3>
+                    <p class="usp-description">Create a supportive environment where students can thrive both
+                        academically and personally
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="section">
+        <div class="div1">
+            <div class="container">
+                <h2 class="section-title">Our Team</h2>
+                <div class="team-grid">
+                    <div class="team-card">
+                        <div class="team-photo">DA</div>
+                        <h3 class="team-name">Dreshti Achhra</h3>
+                        <p class="team-role">Mental Health Specialist</p>
+                    </div>
+                    <div class="team-card">
+                        <div class="team-photo">SB</div>
+                        <h3 class="team-name">Saniya Bijlani</h3>
+                        <p class="team-role">Front-end Developer</p>
+                    </div>
+                    <div class="team-card">
+                        <div class="team-photo">HB</div>
+                        <h3 class="team-name">Harshita Bhatia</h3>
+                        <p class="team-role">AI & Data Science Lead</p>
+                    </div>
+                    <div class="team-card">
+                        <div class="team-photo">JM</div>
+                        <h3 class="team-name">Janvi Matani</h3>
+                        <p class="team-role">Analytics & Insights Expert</p>
+                    </div>
+                    <div class="team-card">
+                        <div class="team-photo">MP</div>
+                        <h3 class="team-name">Mansi Parade</h3>
+                        <p class="team-role">Project Coordinator</p>
+                    </div>
+                    <div class="team-card">
+                        <div class="team-photo">WP</div>
+                        <h3 class="team-name">Wansh Paryani</h3>
+                        <p class="team-role">Backend and JS Developer</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="section contact-section">
+        <div class="container">
+            <h2 class="section-title">Get in Touch</h2>
+            <p style="font-size: 1.1rem; margin-bottom: 30px; opacity: 0.9;">
+                Have questions about our platform or want to learn more about implementing
+                digital mental health solutions at your institution?
+            </p>
+            <div class="contact-info">
+                <div class="contact-item">
+                    <span>📧</span>
+                    <!-- Updated email to mindHeaven branding -->
+                    <a href="mailto:info@mindheaven.edu">info@mindheaven.edu</a>
+                </div>
+                <div class="contact-item">
+                    <span>🌐</span>
+                    <!-- Updated website to mindHeaven branding -->
+                    <a href="indexmh.html">www.mindheaven.edu</a>
+                </div>
+            </div>
+        </div>
+    </section>
+</body>
+
+</html>

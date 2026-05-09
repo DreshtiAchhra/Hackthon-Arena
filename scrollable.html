@@ -1,0 +1,2163 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mental Health Resource Hub - Higher Education</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-blue: #4a90e2;
+            --light-blue: #7bb3f0;
+            --lighter-blue: #a8d0f7;
+            --pale-blue: #e8f4fd;
+            --dark-blue: #2c5aa0;
+            --white: #ffffff;
+            --text-dark: #2c3e50;
+            --text-light: #6c757d;
+            --success: #28a745;
+            --warning: #ffc107;
+            --danger: #dc3545;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: var(--text-dark);
+            background: linear-gradient(135deg, var(--pale-blue) 0%, var(--white) 100%);
+            min-height: 100vh;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* Moving wave background animation */
+        .wave-background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            opacity: 0.08;
+        }
+
+        .wave {
+            position: absolute;
+            width: 300%;
+            height: 300px;
+            background: linear-gradient(45deg, var(--primary-blue), var(--light-blue), var(--lighter-blue));
+            border-radius: 50%;
+            animation: wave 20s ease-in-out infinite;
+        }
+
+        .wave:nth-child(1) {
+            top: 10%;
+            left: -100%;
+            animation-delay: 0s;
+        }
+
+        .wave:nth-child(2) {
+            top: 40%;
+            left: -100%;
+            animation-delay: -7s;
+        }
+
+        .wave:nth-child(3) {
+            top: 70%;
+            left: -100%;
+            animation-delay: -14s;
+        }
+
+        @keyframes wave {
+
+            0%,
+            100% {
+                transform: translateX(0) rotate(0deg) scale(1);
+            }
+
+            25% {
+                transform: translateX(30px) rotate(90deg) scale(1.1);
+            }
+
+            50% {
+                transform: translateX(60px) rotate(180deg) scale(0.9);
+            }
+
+            75% {
+                transform: translateX(30px) rotate(270deg) scale(1.05);
+            }
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Circular dashboard button in corner */
+        .dashboard-btn {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            width: 60px;
+            height: 60px;
+            background: var(--primary-blue);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            font-size: 1.5rem;
+            box-shadow: 0 4px 15px rgba(74, 144, 226, 0.3);
+            z-index: 1000;
+            transition: all 0.3s ease;
+        }
+
+        .dashboard-btn:hover {
+            background: var(--dark-blue);
+            transform: scale(1.1);
+        }
+
+        /* Hero Section */
+        .hero {
+            text-align: center;
+            padding: 3rem 0;
+            background: linear-gradient(135deg, var(--lighter-blue) 0%, var(--pale-blue) 100%);
+        }
+
+        .hero h1 {
+            font-size: 2.5rem;
+            color: var(--dark-blue);
+            margin-bottom: 1rem;
+            animation: fadeInUp 1s ease;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            color: var(--text-light);
+            max-width: 600px;
+            margin: 0 auto 2rem;
+            animation: fadeInUp 1s ease 0.2s both;
+        }
+
+        /* Time-based daily motivation */
+        .daily-motivation {
+            background: var(--white);
+            padding: 1.5rem 2rem;
+            border-radius: 20px;
+            display: inline-block;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 15px rgba(74, 144, 226, 0.2);
+            animation: fadeInUp 1s ease 0.4s both;
+            max-width: 500px;
+            border: 2px solid var(--lighter-blue);
+        }
+
+        .motivation-text {
+            font-size: 1.1rem;
+            color: var(--primary-blue);
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+        }
+
+        .motivation-time {
+            font-size: 0.9rem;
+            color: var(--text-light);
+        }
+
+        /* Navigation Tabs */
+        .tab-nav {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin: 2rem 0;
+            padding: 0 1rem;
+        }
+
+        .tab-btn {
+            background: var(--white);
+            border: 2px solid var(--lighter-blue);
+            color: var(--primary-blue);
+            padding: 0.75rem 1.5rem;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+
+        .tab-btn:hover,
+        .tab-btn.active {
+            background: var(--primary-blue);
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(74, 144, 226, 0.3);
+        }
+
+        /* Content Sections */
+        .content-section {
+            display: none;
+            padding: 2rem 0;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .content-section.active {
+            display: block;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 2rem;
+            color: var(--dark-blue);
+            margin-bottom: 2rem;
+        }
+
+        /* Organized sections with proper spacing */
+        .section-container {
+            background: var(--white);
+            padding: 2rem;
+            border-radius: 15px;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 20px rgba(74, 144, 226, 0.1);
+        }
+
+        .section-header {
+            color: var(--primary-blue);
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid var(--pale-blue);
+        }
+
+        /* Scrollable video container */
+        .video-container {
+            max-height: 550px;
+            overflow-y: auto;
+            padding-right: 10px;
+        }
+
+        .video-card {
+            background: var(--pale-blue);
+            padding: 1.5rem;
+            border-radius: 10px;
+            margin-bottom: 1.5rem;
+            border-left: 4px solid var(--primary-blue);
+        }
+
+        .video-card h4 {
+            color: var(--primary-blue);
+            margin-bottom: 0.5rem;
+        }
+
+        .video-card p {
+            color: var(--text-light);
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+        }
+
+        .video-embed {
+            width: 100%;
+            height: 440px;
+            border-radius: 10px;
+            border: none;
+            display: block;
+            background: #f0f0f0;
+        }
+
+        img.video-thumbnail {
+            width: 100%;
+            height: auto;
+            border-radius: 10px;
+            display: block;
+            object-fit: cover;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+        }
+
+        /* Fallback for videos that don't load */
+        .video-fallback {
+            display: none;
+            padding: 20px;
+            text-align: center;
+            background: #f8f9fa;
+            border: 2px dashed #dee2e6;
+            border-radius: 10px;
+            color: #6c757d;
+        }
+
+        .video-embed[onerror] + .video-fallback {
+            display: block;
+        }
+
+        /* Scrollable audio container */
+        .audio-container {
+            max-height: 400px;
+            overflow-y: auto;
+            padding-right: 10px;
+        }
+
+        .audio-card {
+            background: var(--pale-blue);
+            padding: 1.5rem;
+            border-radius: 10px;
+            margin-bottom: 1rem;
+            border-left: 4px solid var(--success);
+        }
+
+        .audio-card h4 {
+            color: var(--success);
+            margin-bottom: 0.5rem;
+        }
+
+        .audio-card audio {
+            width: 100%;
+            margin-top: 0.5rem;
+        }
+
+        /* Resource Grid */
+        .resource-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .resource-card {
+            background: var(--white);
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 4px 20px rgba(74, 144, 226, 0.1);
+            transition: all 0.3s ease;
+            border-left: 4px solid var(--primary-blue);
+        }
+
+        .resource-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 30px rgba(74, 144, 226, 0.2);
+        }
+
+        .resource-card h3 {
+            color: var(--primary-blue);
+            margin-bottom: 1rem;
+            font-size: 1.3rem;
+        }
+
+        .resource-card p {
+            color: var(--text-light);
+            margin-bottom: 1rem;
+        }
+
+        .btn {
+            background: var(--primary-blue);
+            color: white;
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+            margin: 0.25rem;
+        }
+
+        .btn:hover {
+            background: var(--dark-blue);
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background: var(--lighter-blue);
+        }
+
+        .btn-success {
+            background: var(--success);
+        }
+
+        .btn-warning {
+            background: var(--warning);
+        }
+
+        .btn-danger {
+            background: var(--danger);
+        }
+
+        /* Clean journal without lines */
+        .mood-journal {
+            background: var(--white);
+            padding: 2rem;
+            border-radius: 15px;
+            margin: 1rem 0;
+            border: 2px solid var(--lighter-blue);
+            box-shadow: 0 4px 20px rgba(74, 144, 226, 0.1);
+        }
+
+        .journal-header {
+            text-align: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .journal-date {
+            color: var(--primary-blue);
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
+
+        .mood-selector {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin: 1rem 0;
+            flex-wrap: wrap;
+        }
+
+        .mood-emoji {
+            font-size: 2rem;
+            padding: 0.5rem;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+
+        .mood-emoji:hover,
+        .mood-emoji.selected {
+            background: var(--pale-blue);
+            transform: scale(1.2);
+            border-color: var(--primary-blue);
+        }
+
+        .journal-textarea {
+            width: 100%;
+            min-height: 120px;
+            padding: 1rem;
+            border: 2px solid var(--lighter-blue);
+            border-radius: 10px;
+            font-size: 1rem;
+            line-height: 1.8;
+            resize: vertical;
+            background: var(--white);
+        }
+
+        .journal-textarea:focus {
+            outline: none;
+            border-color: var(--primary-blue);
+            box-shadow: 0 0 10px rgba(74, 144, 226, 0.2);
+        }
+
+        /* Assessment trigger button */
+        .assessment-trigger {
+            text-align: center;
+            margin: 2rem 0;
+        }
+
+        .assessment-container {
+            background: var(--white);
+            padding: 2rem;
+            border-radius: 15px;
+            margin: 1rem 0;
+            box-shadow: 0 4px 20px rgba(74, 144, 226, 0.1);
+            display: none;
+        }
+
+        .assessment-container.show {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .question {
+            margin-bottom: 1.5rem;
+        }
+
+        .question h4 {
+            color: var(--primary-blue);
+            margin-bottom: 0.5rem;
+        }
+
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .option {
+            padding: 0.5rem;
+            border: 2px solid var(--lighter-blue);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .option:hover,
+        .option.selected {
+            background: var(--pale-blue);
+            border-color: var(--primary-blue);
+        }
+
+        .results-display {
+            background: var(--pale-blue);
+            padding: 1.5rem;
+            border-radius: 10px;
+            margin-top: 1rem;
+            display: none;
+        }
+
+        .results-display.show {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+
+        /* Auto-scrolling quotes */
+        .quotes-wall {
+            background: linear-gradient(135deg, var(--primary-blue), var(--light-blue));
+            color: white;
+            padding: 3rem 2rem;
+            border-radius: 15px;
+            text-align: center;
+            margin: 2rem 0;
+            overflow: hidden;
+            position: relative;
+            height: 200px;
+        }
+
+        .quotes-container {
+            display: flex;
+            animation: scrollQuotes 40s linear infinite;
+        }
+
+        .quote-item {
+            min-width: 100%;
+            padding: 0 2rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            height: 140px;
+        }
+
+        .quote-text {
+            font-size: 1.5rem;
+            font-style: italic;
+            margin-bottom: 1rem;
+            line-height: 1.4;
+        }
+
+        .quote-author {
+            font-size: 1rem;
+            opacity: 0.8;
+        }
+
+        @keyframes scrollQuotes {
+            0% {
+                transform: translateX(0);
+            }
+
+            16% {
+                transform: translateX(0);
+            }
+
+            20% {
+                transform: translateX(-100%);
+            }
+
+            36% {
+                transform: translateX(-100%);
+            }
+
+            40% {
+                transform: translateX(-200%);
+            }
+
+            56% {
+                transform: translateX(-200%);
+            }
+
+            60% {
+                transform: translateX(-300%);
+            }
+
+            76% {
+                transform: translateX(-300%);
+            }
+
+            80% {
+                transform: translateX(-400%);
+            }
+
+            96% {
+                transform: translateX(-400%);
+            }
+
+            100% {
+                transform: translateX(-500%);
+            }
+        }
+
+        /* Story Grid */
+        .story-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        /* Modal for creative activities */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 2000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+        }
+
+        .modal-content {
+            background-color: var(--white);
+            margin: 5% auto;
+            padding: 2rem;
+            border-radius: 20px;
+            width: 90%;
+            max-width: 600px;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .close {
+            color: var(--text-light);
+            float: right;
+            font-size: 2rem;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .close:hover {
+            color: var(--danger);
+        }
+
+        .creative-options {
+            display: flex;
+            gap: 1rem;
+            margin: 1rem 0;
+            flex-wrap: wrap;
+        }
+
+        .creative-section {
+            display: none;
+            margin-top: 1rem;
+        }
+
+        #artCanvas {
+            border: 2px solid var(--lighter-blue);
+            border-radius: 10px;
+            cursor: crosshair;
+        }
+
+        .crisis-button {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: var(--danger);
+            color: white;
+            padding: 1rem;
+            border-radius: 50%;
+            border: none;
+            font-size: 1.2rem;
+            cursor: pointer;
+            box-shadow: 0 4px 20px rgba(220, 53, 69, 0.3);
+            z-index: 1000;
+            animation: pulse 2s infinite;
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+            }
+
+            50% {
+                transform: scale(1.05);
+            }
+
+            100% {
+                transform: scale(1);
+            }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2rem;
+            }
+
+            .tab-nav {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .resource-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .video-embed {
+                height: 150px;
+            }
+
+            .quotes-container .quote-text {
+                font-size: 1.2rem;
+            }
+
+            .resource-grid,
+            .story-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Wellness Insights Styles */
+        .wellness-insights-container {
+            background: linear-gradient(135deg, var(--primary-blue), var(--light-blue));
+            color: white;
+            padding: 1.5rem 0;
+            margin: 1rem 0;
+        }
+
+        .insights-banners {
+            display: flex;
+            gap: 1rem;
+            overflow-x: auto;
+            padding: 0 1rem;
+        }
+
+        .insight-banner {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 15px;
+            padding: 1rem;
+            min-width: 300px;
+            flex-shrink: 0;
+        }
+
+        .insight-banner.high-priority {
+            border-color: #ff6b6b;
+            background: rgba(255, 107, 107, 0.1);
+        }
+
+        .insight-banner-icon {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .insight-banner-title {
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+
+        /* Personalized Recommendations Styles */
+        .personalized-recommendations-container {
+            background: var(--pale-blue);
+            padding: 2rem 0;
+            margin: 1rem 0;
+        }
+
+        .recommendations-title {
+            text-align: center;
+            color: var(--dark-blue);
+            font-size: 1.8rem;
+            margin-bottom: 2rem;
+        }
+
+        .recommendations-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            padding: 0 1rem;
+        }
+
+        .recommendation-card {
+            background: white;
+            border-radius: 15px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 20px rgba(74, 144, 226, 0.1);
+            border-left: 4px solid var(--primary-blue);
+        }
+
+        .recommendation-card.urgent {
+            border-left-color: #dc3545;
+            background: linear-gradient(135deg, #fff5f5, white);
+        }
+
+        .recommendation-card.high {
+            border-left-color: #ffc107;
+        }
+
+        .recommendation-title {
+            color: var(--primary-blue);
+            font-size: 1.2rem;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+
+        .recommendation-description {
+            color: var(--text-light);
+            margin-bottom: 1rem;
+        }
+
+        .recommendation-resources {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        .resource-tag {
+            background: var(--pale-blue);
+            color: var(--primary-blue);
+            padding: 0.25rem 0.75rem;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .resource-tag:hover {
+            background: var(--primary-blue);
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        /* Loading States */
+        .loading-spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 2px solid var(--lighter-blue);
+            border-radius: 50%;
+            border-top-color: var(--primary-blue);
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .loading-text {
+            color: var(--text-light);
+            font-style: italic;
+        }
+
+        /* Mood Test Panel Styles */
+        #moodTestPanel {
+            border: 2px solid var(--primary-blue);
+            background: linear-gradient(135deg, var(--pale-blue), var(--white));
+        }
+
+        #moodTestPanel h4 {
+            color: var(--primary-blue);
+            margin-bottom: 0.5rem;
+            font-size: 1.1rem;
+        }
+
+        #moodTestPanel p {
+            margin: 0.25rem 0;
+            font-size: 0.9rem;
+        }
+
+        #moodTestPanel strong {
+            color: var(--dark-blue);
+        }
+
+        ::-webkit-scrollbar {
+            width: 4px;
+            /* Width of the scrollbar */
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Moving wave background -->
+    <div class="wave-background">
+        <div class="wave"></div>
+        <div class="wave"></div>
+        <div class="wave"></div>
+    </div>
+
+    <!-- Circular dashboard button -->
+    <a href="indexmh.html" class="dashboard-btn" title="Dashboard">🏠</a>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+
+            <h1>Mind Heaven </h1>
+
+
+            <div class="motivation-time" id="motivationTime">
+                Good morning! Start your day with positivity.
+            </div>
+        </div>
+        <h1>Your Mental Wellness Journey</h1>
+        <p>A comprehensive resource hub designed to support your mental health and well-being throughout your higher
+            education journey.</p>
+        </div>
+    </section>
+
+    <!-- Wellness Insight Banners -->
+    <div id="wellness-insights" class="wellness-insights-container" style="display: none;">
+        <div class="container">
+            <div id="insights-banners" class="insights-banners"></div>
+        </div>
+    </div>
+
+    <!-- Personalized Recommendations -->
+    <!-- Navigation Tabs -->
+    <div class="container">
+        <div class="tab-nav">
+            <button class="tab-btn active" onclick="showSection('relax')">🧘 Relax</button>
+            <button class="tab-btn" onclick="showSection('learn')">📚 Learn</button>
+            <button class="tab-btn" onclick="showSection('self-help')">🛠️ Self-Help</button>
+            <button class="tab-btn" onclick="showSection('inspire')">✨ Inspire</button>
+            <button class="tab-btn" onclick="showSection('activities')">🎯 Activities</button>
+            <button class="tab-btn" onclick="showSection('support')">🆘 Get Help</button>
+        </div>
+
+        <!-- Reorganized Relax Section with proper sections -->
+        <section id="relax" class="content-section active">
+            <h2 class="section-title">Calm & Relaxation Corner</h2>
+
+            <!-- Video Section -->
+            <div class="section-container">
+                <h3 class="section-header">🎥 Guided Meditation Videos</h3>
+                <div class="video-container">
+                    <div class="video-card">
+                        <h4>10-Minute Meditation for Stress Relief</h4>
+                        <p>A guided meditation session perfect for reducing academic stress and anxiety. Practice mindfulness and find your inner calm during overwhelming study periods.</p>
+                        <a href="https://www.youtube.com/watch?v=ZToicYcHIOU" target="_blank" style="display:block; position:relative; text-decoration:none;">
+                            <img class="video-thumbnail" src="https://img.youtube.com/vi/ZToicYcHIOU/hqdefault.jpg" alt="10-Minute Meditation" loading="lazy">
+                        </a>
+                    </div>
+
+                    <div class="video-card">
+                        <h4>Deep Breathing Exercise for Anxiety</h4>
+                        <p>Learn powerful breathing techniques to manage anxiety and panic attacks. Perfect for before exams or stressful situations in your academic journey.</p>
+                        <a href="https://www.youtube.com/watch?v=acUZdGd_3Oo" target="_blank" style="display:block; position:relative; text-decoration:none;">
+                            <img class="video-thumbnail" src="https://i.ytimg.com/vi/WCqBk4IsH5g/maxresdefault.jpg" alt="Deep Breathing Exercise" loading="lazy">
+                        </a>
+                    </div>
+
+                    <div class="video-card">
+                        <h4>Progressive Muscle Relaxation</h4>
+                        <p>Release physical tension and mental stress with this guided progressive muscle relaxation technique. Ideal for unwinding after long study sessions.</p>
+                        <a href="https://www.youtube.com/watch?v=1nZEdqcGVzo" target="_blank" style="display:block; position:relative; text-decoration:none;">
+                            <img class="video-thumbnail" src="https://img.youtube.com/vi/1nZEdqcGVzo/hqdefault.jpg" alt="Progressive Muscle Relaxation" loading="lazy">
+                        </a>
+                    </div>
+
+                    <div class="video-card">
+                        <h4>Sleep Meditation for Better Rest</h4>
+                        <p>Overcome insomnia and improve sleep quality with this calming bedtime meditation designed specifically for students dealing with academic stress.</p>
+                        <a href="https://www.youtube.com/watch?v=aEqlQvczMLQ" target="_blank" style="display:block; position:relative; text-decoration:none;">
+                            <img class="video-thumbnail" src="https://i.ytimg.com/vi/_i6qhVFBkhs/maxresdefault.jpg" alt="Sleep Meditation" loading="lazy">
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Audio Section -->
+            <div class="section-container">
+                <h3 class="section-header">🎵 Soothing Nature Sounds</h3>
+                <div class="audio-container">
+                    <div class="audio-card">
+                        <h4>Ocean Waves</h4>
+                        <p>Immerse yourself in the calming sound of ocean waves to reduce stress and improve focus during study sessions.</p>
+                        <audio controls loop>
+                            <source src="games/sounds/waves.mp3" type="audio/mpeg">
+                            Your browser does not support the audio element.
+                        </audio>
+                    </div>
+
+                    <div class="audio-card">
+                        <h4>Gentle Rain</h4>
+                        <p>Soothing rain sounds to create a peaceful atmosphere for studying, relaxation, or sleep.</p>
+                        <audio controls loop>
+                            <source src="games/sounds/rain.mp3" type="audio/mpeg">
+                            Your browser does not support the audio element.
+                        </audio>
+                    </div>
+
+                    <div class="audio-card">
+                        <h4>Forest Ambience</h4>
+                        <p>Natural forest sounds with birds chirping to help you connect with nature and reduce anxiety.</p>
+                        <audio controls loop>
+                            <source src="games/sounds/forest.mp3" type="audio/mpeg">
+                            Your browser does not support the audio element.
+                        </audio>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Learn Section -->
+        <section id="learn" class="content-section">
+            <h2 class="section-title">Psychoeducational Resources</h2>
+
+            <div class="resource-grid">
+                <div class="resource-card">
+                    <h3>📊 Understanding Mental Health in Higher Education</h3>
+                    <p><strong>Key Statistics:</strong> Over 40% of university students experience significant anxiety,
+                        while 30% struggle with depression. Academic performance is directly impacted by mental health
+                        issues.</p>
+                    <div style="margin-top: 1rem;">
+                        <h4>Contributing Factors:</h4>
+                        <ul style="margin-left: 1rem; color: var(--text-light);">
+                            <li>Academic pressure and heavy workloads</li>
+                            <li>Financial struggles and rising costs</li>
+                            <li>Social media impact and isolation</li>
+                            <li>Post-graduation uncertainty</li>
+                        </ul>
+                    </div>
+                    <button class="btn" onclick="toggleContent('article1')">Read More</button>
+                    <div id="article1"
+                        style="display: none; margin-top: 1rem; padding: 1rem; background: var(--pale-blue); border-radius: 8px;">
+                        <p>Research from UCL indicates that students face increased risk of depression and anxiety
+                            compared to non-students. The socio-ecological model highlights individual, interpersonal,
+                            institutional, community, and policy-level factors influencing student mental health.</p>
+                    </div>
+                </div>
+
+                <div class="resource-card">
+                    <h3>🧠 Stress, Anxiety, and Depression Among Students</h3>
+                    <p><strong>Impact on Academic Life:</strong> Mental health issues lead to declining performance,
+                        increased dropout rates, and social withdrawal, creating a cycle that can be difficult to break.
+                    </p>
+                    <div style="margin-top: 1rem;">
+                        <h4>Warning Signs:</h4>
+                        <ul style="margin-left: 1rem; color: var(--text-light);">
+                            <li>Persistent feelings of sadness or hopelessness</li>
+                            <li>Difficulty concentrating on studies</li>
+                            <li>Changes in sleep or appetite patterns</li>
+                            <li>Withdrawal from friends and activities</li>
+                        </ul>
+                    </div>
+                    <button class="btn" onclick="toggleContent('article2')">Read More</button>
+                    <div id="article2"
+                        style="display: none; margin-top: 1rem; padding: 1rem; background: var(--pale-blue); border-radius: 8px;">
+                        <p>Understanding these psychological distresses is crucial for early intervention. Students
+                            often experience a combination of academic, social, and personal stressors that compound
+                            over time.</p>
+                    </div>
+                </div>
+
+                <div class="resource-card">
+                    <h3>💡 Digital Mental Health Interventions</h3>
+                    <p><strong>Modern Solutions:</strong> Digital mental health tools, including CBT programs and
+                        mindfulness apps, show significant promise in reducing anxiety and depression among students.
+                    </p>
+                    <div style="margin-top: 1rem;">
+                        <h4>Effective Strategies:</h4>
+                        <ul style="margin-left: 1rem; color: var(--text-light);">
+                            <li>Cognitive Behavioral Therapy (CBT) techniques</li>
+                            <li>Mindfulness and meditation practices</li>
+                            <li>Peer support networks and mentorship</li>
+                            <li>Academic flexibility and mental health leave</li>
+                        </ul>
+                    </div>
+                    <button class="btn" onclick="toggleContent('article3')">Read More</button>
+                    <div id="article3"
+                        style="display: none; margin-top: 1rem; padding: 1rem; background: var(--pale-blue); border-radius: 8px;">
+                        <p>Universities are increasingly implementing comprehensive wellness programs that include 24/7
+                            hotlines, online therapy options, and flexible academic policies to support student mental
+                            health.</p>
+                    </div>
+                </div>
+
+                <div class="resource-card">
+                    <h3>🏥 Campus Mental Health Services</h3>
+                    <p><strong>Available Support:</strong> Most universities now offer expanded on-campus counseling
+                        services, crisis intervention, and specialized programs for student mental health.</p>
+                    <div style="margin-top: 1rem;">
+                        <h4>Service Types:</h4>
+                        <ul style="margin-left: 1rem; color: var(--text-light);">
+                            <li>Individual and group counseling</li>
+                            <li>Crisis intervention and emergency support</li>
+                            <li>Wellness workshops and programs</li>
+                            <li>Psychiatric services and medication management</li>
+                        </ul>
+                    </div>
+                    <button class="btn" onclick="toggleContent('article4')">Read More</button>
+                    <div id="article4"
+                        style="display: none; margin-top: 1rem; padding: 1rem; background: var(--pale-blue); border-radius: 8px;">
+                        <p>Don't hesitate to reach out to your campus mental health services. These resources are
+                            specifically designed to understand and address the unique challenges faced by students in
+                            higher education.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Reorganized Self-Help Section -->
+        <section id="self-help" class="content-section">
+            <h2 class="section-title">Self-Help Tools</h2>
+
+            <!-- Journal Section -->
+            <div class="section-container">
+                <h3 class="section-header">📔 Daily Reflection Journal</h3>
+                <div class="mood-journal">
+                    <div class="journal-header">
+                        <div class="journal-date" id="journalDate"></div>
+                    </div>
+
+                    <div>
+                        <h4>How are you feeling today?</h4>
+                        <div class="mood-selector">
+                            <span class="mood-emoji" onclick="selectMood(this, 'amazing')" title="Amazing">😄</span>
+                            <span class="mood-emoji" onclick="selectMood(this, 'good')" title="Good">😊</span>
+                            <span class="mood-emoji" onclick="selectMood(this, 'okay')" title="Okay">😐</span>
+                            <span class="mood-emoji" onclick="selectMood(this, 'sad')" title="Sad">😢</span>
+                            <span class="mood-emoji" onclick="selectMood(this, 'stressed')" title="Stressed">😰</span>
+                        </div>
+                    </div>
+
+                    <textarea class="journal-textarea" id="journalEntry"></textarea>
+
+                    <button class="btn btn-success" onclick="saveJournalEntry()">💾 Save Entry</button>
+                    <button class="btn btn-secondary" onclick="viewPastEntries()">📖 View Past Entries</button>
+                </div>
+            </div>
+
+            <!-- Assessment Section with trigger -->
+            <div class="section-container">
+                <h3 class="section-header">🧠 Stress Assessment</h3>
+                <div class="assessment-trigger">
+                    <p>Take a quick assessment to understand your current stress levels and get personalized
+                        recommendations.</p>
+                    <button class="btn btn-warning" onclick="startAssessment()">📊 Start Stress Assessment</button>
+                </div>
+
+                <div class="assessment-container" id="assessmentContainer">
+                    <h3>Stress Level Assessment</h3>
+                    <p>Answer these questions honestly to get insights into your current stress levels.</p>
+
+                    <div class="question">
+                        <h4>1. How often do you feel overwhelmed by your academic workload?</h4>
+                        <div class="options">
+                            <div class="option" onclick="selectOption(this, 'q1', 4)">Almost always</div>
+                            <div class="option" onclick="selectOption(this, 'q1', 3)">Often</div>
+                            <div class="option" onclick="selectOption(this, 'q1', 2)">Sometimes</div>
+                            <div class="option" onclick="selectOption(this, 'q1', 1)">Rarely</div>
+                            <div class="option" onclick="selectOption(this, 'q1', 0)">Never</div>
+                        </div>
+                    </div>
+
+                    <div class="question">
+                        <h4>2. How well are you sleeping lately?</h4>
+                        <div class="options">
+                            <div class="option" onclick="selectOption(this, 'q2', 4)">Very poorly - frequent insomnia
+                            </div>
+                            <div class="option" onclick="selectOption(this, 'q2', 3)">Poorly - trouble falling asleep
+                            </div>
+                            <div class="option" onclick="selectOption(this, 'q2', 2)">Okay - some restless nights</div>
+                            <div class="option" onclick="selectOption(this, 'q2', 1)">Well - mostly good sleep</div>
+                            <div class="option" onclick="selectOption(this, 'q2', 0)">Very well - consistent good sleep
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="question">
+                        <h4>3. How often do you feel anxious about your future?</h4>
+                        <div class="options">
+                            <div class="option" onclick="selectOption(this, 'q3', 4)">Constantly</div>
+                            <div class="option" onclick="selectOption(this, 'q3', 3)">Very often</div>
+                            <div class="option" onclick="selectOption(this, 'q3', 2)">Sometimes</div>
+                            <div class="option" onclick="selectOption(this, 'q3', 1)">Rarely</div>
+                            <div class="option" onclick="selectOption(this, 'q3', 0)">Never</div>
+                        </div>
+                    </div>
+
+                    <button class="btn btn-warning" onclick="calculateStressLevel()">📊 Calculate My Stress
+                        Level</button>
+
+                    <div class="results-display" id="stressResults">
+                        <h4>Your Stress Level Results:</h4>
+                        <div id="stressScore"></div>
+                        <div id="stressRecommendations"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sleep Tracker Section -->
+            <div class="section-container">
+                <h3 class="section-header">😴 Sleep Tracker</h3>
+                <p>Track your sleep patterns to improve your mental health and academic performance.</p>
+
+                <div style="display: flex; gap: 1rem; margin: 1rem 0; flex-wrap: wrap;">
+                    <div>
+                        <label>Bedtime:</label>
+                        <input type="time" id="bedtime"
+                            style="padding: 0.5rem; border: 2px solid var(--lighter-blue); border-radius: 8px;" />
+                    </div>
+                    <div>
+                        <label>Wake time:</label>
+                        <input type="time" id="waketime"
+                            style="padding: 0.5rem; border: 2px solid var(--lighter-blue); border-radius: 8px;" />
+                    </div>
+                    <div>
+                        <label>Sleep quality (1-10):</label>
+                        <input type="number" id="sleepquality" min="1" max="10"
+                            style="padding: 0.5rem; border: 2px solid var(--lighter-blue); border-radius: 8px;" />
+                    </div>
+                </div>
+
+                <button class="btn btn-success" onclick="logSleep()">📝 Log Sleep</button>
+                <button class="btn btn-secondary" onclick="viewSleepStats()">📈 View Sleep Stats</button>
+
+                <div id="sleepChart"
+                    style="display: none; background: var(--white); padding: 1rem; border-radius: 10px; margin-top: 1rem; text-align: center;">
+                    <h4>Your Sleep Pattern</h4>
+                    <div id="sleepData"></div>
+                </div>
+            </div>
+
+            <!-- Pomodoro Timer Section -->
+            <div class="section-container">
+                <h3 class="section-header">⏰ Pomodoro Focus Timer</h3>
+                <p>Use the Pomodoro technique to improve focus and reduce study stress.</p>
+
+                <div style="text-align: center;">
+                    <div id="timerDisplay"
+                        style="font-size: 3rem; color: var(--primary-blue); font-weight: bold; margin: 1rem 0;">25:00
+                    </div>
+
+                    <div style="display: flex; gap: 1rem; justify-content: center; margin: 1rem 0;">
+                        <button class="btn btn-success" onclick="startTimer()">▶️ Start</button>
+                        <button class="btn btn-warning" onclick="pauseTimer()">⏸️ Pause</button>
+                        <button class="btn btn-danger" onclick="resetTimer()">🔄 Reset</button>
+                    </div>
+
+                    <div>
+                        <button class="btn btn-secondary" onclick="setTimer(25)">25 min Focus</button>
+                        <button class="btn btn-secondary" onclick="setTimer(5)">5 min Break</button>
+                        <button class="btn btn-secondary" onclick="setTimer(15)">15 min Break</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Enhanced Inspire Section -->
+        <section id="inspire" class="content-section">
+            <h2 class="section-title">Inspiration & Motivation</h2>
+
+            <!-- Auto-scrolling quotes -->
+            <div class="quotes-wall">
+                <div class="quotes-container">
+                    <div class="quote-item">
+                        <div class="quote-text">"The only way to do great work is to love what you do."</div>
+                        <div class="quote-author">- Steve Jobs</div>
+                    </div>
+                    <div class="quote-item">
+                        <div class="quote-text">"Your mental health is a priority. Your happiness is essential. Your
+                            self-care is a necessity."</div>
+                        <div class="quote-author">- Anonymous</div>
+                    </div>
+                    <div class="quote-item">
+                        <div class="quote-text">"It's okay to not be okay. It's not okay to stay that way."</div>
+                        <div class="quote-author">- Anonymous</div>
+                    </div>
+                    <div class="quote-item">
+                        <div class="quote-text">"You are braver than you believe, stronger than you seem, and smarter
+                            than you think."</div>
+                        <div class="quote-author">- A.A. Milne</div>
+                    </div>
+                    <div class="quote-item">
+                        <div class="quote-text">"Progress, not perfection, is the goal."</div>
+                        <div class="quote-author">- Anonymous</div>
+                    </div>
+                    <div class="quote-item">
+                        <div class="quote-text">"The only way to do great work is to love what you do."</div>
+                        <div class="quote-author">- Steve Jobs</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Success Stories -->
+            <div class="story-grid">
+                <div class="story-card">
+                    <h4>🌟 Sarah's Journey</h4>
+                    <p>"I struggled with severe anxiety during my sophomore year. Through campus counseling and
+                        mindfulness practices, I learned to manage my stress. Now I'm thriving in my final year and
+                        helping other students through peer support groups."</p>
+                </div>
+
+                <div class="story-card">
+                    <h4>🌟 Marcus's Transformation</h4>
+                    <p>"Depression made me want to drop out. But with the right support system and therapy, I discovered
+                        my passion for psychology. I'm now pursuing a graduate degree in mental health counseling to
+                        help others like me."</p>
+                </div>
+
+                <div class="story-card">
+                    <h4>🌟 Elena's Recovery</h4>
+                    <p>"Panic attacks were controlling my life and affecting my studies. Learning breathing techniques
+                        and having a strong support network helped me regain control. I graduated with honors and now
+                        work in mental health advocacy."</p>
+                </div>
+
+                <div class="story-card">
+                    <h4>🌟 David's Breakthrough</h4>
+                    <p>"Social anxiety made group projects and presentations terrifying. Through gradual exposure
+                        therapy and self-compassion practices, I built confidence. I now lead student organizations and
+                        mentor others facing similar challenges."</p>
+                </div>
+            </div>
+
+            <div class="resource-grid">
+                <div class="resource-card">
+                    <h3>🎯 Daily Affirmations</h3>
+                    <p>Start each day with positive self-talk and encouragement.</p>
+                    <div id="dailyAffirmation" style="font-style: italic; color: var(--primary-blue); margin: 1rem 0;">
+                    </div>
+                    <button class="btn" onclick="getNewAffirmation()">✨ New Affirmation</button>
+                </div>
+
+                <div class="resource-card">
+                    <h3>🏆 Achievement Tracker</h3>
+                    <p>Celebrate your wins, no matter how small!</p>
+                    <input type="text" id="achievementInput" placeholder="What did you accomplish today?"
+                        style="width: 100%; padding: 0.5rem; margin: 0.5rem 0; border: 2px solid var(--lighter-blue); border-radius: 8px;">
+                    <button class="btn btn-success" onclick="addAchievement()">🎉 Add Achievement</button>
+                    <div id="achievementsList" style="margin-top: 1rem;"></div>
+                </div>
+
+                <!-- Mood Integration Test Section -->
+                <div class="resource-card">
+                    <h3>🧪 Mood Integration Test</h3>
+                    <p>Test the mood tracking and recommendation system.</p>
+                    <button class="btn btn-warning" onclick="toggleMoodTest()">🔍 Show Test Panel</button>
+                    <div id="moodTestPanel" style="display: none; margin-top: 1rem; padding: 1rem; background: var(--pale-blue); border-radius: 8px;">
+                        <div id="testStatus">Loading mood store...</div>
+                        <div id="testMoodData" style="margin-top: 1rem;"></div>
+                        <div id="testRecommendations" style="margin-top: 1rem;"></div>
+                        <div style="margin-top: 1rem;">
+                            <button class="btn btn-secondary" onclick="addTestMood('sad')">😢 Add Sad Mood</button>
+                            <button class="btn btn-secondary" onclick="addTestMood('stressed')">😰 Add Stressed Mood</button>
+                            <button class="btn btn-secondary" onclick="addTestMood('anxious')">😟 Add Anxious Mood</button>
+                            <button class="btn btn-secondary" onclick="addTestMood('happy')">😊 Add Happy Mood</button>
+                            <button class="btn btn-danger" onclick="clearTestData()">🗑️ Clear Test Data</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Activities Section with Modal -->
+        <section id="activities" class="content-section">
+            <h2 class="section-title">Wellness Activities</h2>
+
+            <div class="resource-grid">
+                <div class="resource-card">
+                    <h3>🎨 Creative Expression</h3>
+                    <p>Express your feelings through art, writing, or music.</p>
+                    <button class="btn" onclick="openCreativeModal()">Start Creating</button>
+                </div>
+
+                <div class="resource-card">
+                    <h3>🏃‍♀️ Physical Wellness</h3>
+                    <p>Simple exercises and stretches to boost your mood.</p>
+                    <button class="btn">Get Moving</button>
+                </div>
+
+                <div class="resource-card">
+                    <h3>🧩 Mindful Games</h3>
+                    <p>Relaxing puzzles and games to reduce stress.</p>
+                    <button class="btn">Play Now</button>
+                </div>
+
+                <div class="resource-card">
+                    <h3>🌱 Gratitude Practice</h3>
+                    <p>Daily gratitude exercises to shift your mindset.</p>
+                    <button class="btn">Practice Gratitude</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Emergency Support -->
+        <section id="support" class="content-section">
+            <h2 class="section-title">Emergency & Support</h2>
+
+            <div class="resource-grid">
+                <div class="resource-card">
+                    <h3>🆘 Crisis Hotlines</h3>
+                    <p><strong>National Suicide Prevention Lifeline:</strong> 988</p>
+                    <p><strong>Crisis Text Line:</strong> Text HOME to 741741</p>
+                    <p><strong>Campus Counseling:</strong> Contact your student services</p>
+                    <button class="btn btn-danger">Get Immediate Help</button>
+                </div>
+
+                <div class="resource-card">
+                    <h3>❓ Frequently Asked Questions</h3>
+                    <p>Common questions about mental health resources and support.</p>
+                    <button class="btn">View FAQ</button>
+                </div>
+
+                <div class="resource-card">
+                    <h3>🏥 Professional Help</h3>
+                    <p>Find therapists, counselors, and mental health professionals in your area.</p>
+                    <button class="btn">Find Help</button>
+                </div>
+
+                <div class="resource-card">
+                    <h3>👥 Support Groups</h3>
+                    <p>Connect with others who understand what you're going through.</p>
+                    <button class="btn">Join Groups</button>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- Creative Expression Modal -->
+    <div id="creativeModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeCreativeModal()">&times;</span>
+            <h2>Creative Expression</h2>
+            <p>Choose how you'd like to express yourself today:</p>
+
+            <div class="creative-options">
+                <button class="btn" onclick="showCreativeSection('writing')">✍️ Writing</button>
+                <button class="btn" onclick="showCreativeSection('voice')">🎤 Voice Recording</button>
+                <button class="btn" onclick="showCreativeSection('art')">🎨 Digital Art</button>
+            </div>
+
+            <div id="writingSection" class="creative-section">
+                <h3>Writing Prompts</h3>
+                <p>Choose a prompt or write freely:</p>
+                <div style="margin: 1rem 0;">
+                    <button class="btn btn-secondary"
+                        onclick="setWritingPrompt('What are three things you\'re grateful for today?')">Gratitude</button>
+                    <button class="btn btn-secondary"
+                        onclick="setWritingPrompt('Describe a moment when you felt truly happy.')">Happy Memory</button>
+                    <button class="btn btn-secondary"
+                        onclick="setWritingPrompt('What would you tell your younger self?')">Advice</button>
+                </div>
+                <textarea id="writingArea"
+                    style="width: 100%; height: 200px; padding: 1rem; border: 2px solid var(--lighter-blue); border-radius: 8px;"
+                    placeholder="Start writing..."></textarea>
+                <button class="btn btn-success" onclick="saveWriting()">💾 Save Writing</button>
+            </div>
+
+            <div id="voiceSection" class="creative-section">
+                <h3>Voice Recording</h3>
+                <p>Record your thoughts, feelings, or just talk it out:</p>
+                <button class="btn btn-danger" id="recordBtn" onclick="toggleRecording()">🎤 Start Recording</button>
+                <div id="recordingStatus" style="margin: 1rem 0; color: var(--primary-blue);"></div>
+                <audio id="audioPlayback" controls style="width: 100%; margin: 1rem 0; display: none;"></audio>
+            </div>
+
+            <div id="artSection" class="creative-section">
+                <h3>Digital Art Canvas</h3>
+                <p>Draw, doodle, or create art to express your emotions:</p>
+                <div style="margin: 1rem 0;">
+                    <button class="btn btn-secondary" onclick="setCanvasColor('black')">⚫ Black</button>
+                    <button class="btn btn-secondary" onclick="setCanvasColor('blue')">🔵 Blue</button>
+                    <button class="btn btn-secondary" onclick="setCanvasColor('red')">🔴 Red</button>
+                    <button class="btn btn-secondary" onclick="setCanvasColor('green')">🟢 Green</button>
+                    <button class="btn btn-secondary" onclick="clearCanvas()">🗑️ Clear</button>
+                </div>
+                <canvas id="artCanvas" width="500" height="300"></canvas>
+                <button class="btn btn-success" onclick="saveArt()">💾 Save Art</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Crisis Button -->
+    <button class="crisis-button" onclick="showCrisisHelp()" title="Emergency Help">🆘</button>
+
+    <script src="mood-store.js"></script>
+    <script>
+        function updateDailyMotivation() {
+            const motivationText = document.getElementById('motivationText');
+            const motivationTime = document.getElementById('motivationTime');
+
+            if (!motivationText || !motivationTime) {
+                console.warn('Motivation elements not found, skipping daily motivation update.');
+                return;
+            }
+
+            const now = new Date();
+            const hour = now.getHours();
+
+            const messages = [
+                { time: 'morning', text: "Good morning! Today is a fresh start. You have the strength to handle whatever comes your way.", period: "Start your day with positivity." },
+                { time: 'afternoon', text: "You're doing great! Take a moment to appreciate how far you've come today.", period: "Midday motivation boost." },
+                { time: 'evening', text: "As the day winds down, remember to be kind to yourself. You've done your best.", period: "Evening reflection time." },
+                { time: 'night', text: "Rest is productive too. Your mind and body deserve this peaceful time.", period: "Time to unwind and recharge." }
+            ];
+
+            let currentMessage;
+            if (hour >= 5 && hour < 12) {
+                currentMessage = messages[0];
+            } else if (hour >= 12 && hour < 17) {
+                currentMessage = messages[1];
+            } else if (hour >= 17 && hour < 21) {
+                currentMessage = messages[2];
+            } else {
+                currentMessage = messages[3];
+            }
+
+            motivationText.textContent = currentMessage.text;
+            motivationTime.textContent = currentMessage.period;
+        }
+
+        // Tab navigation
+        function showSection(sectionId) {
+            const sections = document.querySelectorAll('.content-section');
+            sections.forEach(section => section.classList.remove('active'));
+
+            const buttons = document.querySelectorAll('.tab-btn');
+            buttons.forEach(btn => btn.classList.remove('active'));
+
+            document.getElementById(sectionId).classList.add('active');
+            event.target.classList.add('active');
+        }
+
+        function toggleContent(articleId) {
+            const content = document.getElementById(articleId);
+            content.style.display = content.style.display === 'none' ? 'block' : 'none';
+        }
+
+        function updateJournalDate() {
+            const now = new Date();
+            const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+            document.getElementById('journalDate').textContent = now.toLocaleDateString('en-US', options);
+        }
+
+        let selectedMood = '';
+        let testMoodSubscription = null;
+
+        function selectMood(element, mood) {
+            document.querySelectorAll('.mood-emoji').forEach(emoji => emoji.classList.remove('selected'));
+            element.classList.add('selected');
+            selectedMood = mood;
+        }
+
+        function saveJournalEntry() {
+            const entry = document.getElementById('journalEntry').value;
+            const date = new Date().toLocaleDateString();
+
+            if (entry.trim() === '') {
+                alert('Please write something in your journal first!');
+                return;
+            }
+
+            const journalEntries = JSON.parse(localStorage.getItem('journalEntries') || '[]');
+            journalEntries.push({
+                date: date,
+                mood: selectedMood,
+                entry: entry,
+                timestamp: new Date().toISOString()
+            });
+            localStorage.setItem('journalEntries', JSON.stringify(journalEntries));
+
+            alert('Journal entry saved!');
+            document.getElementById('journalEntry').value = '';
+            selectedMood = '';
+            document.querySelectorAll('.mood-emoji').forEach(emoji => emoji.classList.remove('selected'));
+        }
+
+        function viewPastEntries() {
+            const entries = JSON.parse(localStorage.getItem('journalEntries') || '[]');
+            if (entries.length === 0) {
+                alert('No journal entries yet. Start writing to build your reflection history!');
+                return;
+            }
+
+            let entriesText = 'Your Journal Entries:\n\n';
+            entries.slice(-5).forEach((entry, index) => {
+                entriesText += `${entry.date} - Mood: ${entry.mood}\n${entry.entry.substring(0, 100)}...\n\n`;
+            });
+
+            alert(entriesText);
+        }
+
+        let assessmentAnswers = {};
+
+        function startAssessment() {
+            document.getElementById('assessmentContainer').classList.add('show');
+        }
+
+        function selectOption(element, question, score) {
+            element.parentNode.querySelectorAll('.option').forEach(option => {
+                option.classList.remove('selected');
+            });
+
+            element.classList.add('selected');
+            assessmentAnswers[question] = score;
+        }
+
+        function calculateStressLevel() {
+            if (Object.keys(assessmentAnswers).length < 3) {
+                alert('Please answer all questions before calculating your stress level.');
+                return;
+            }
+
+            const totalScore = Object.values(assessmentAnswers).reduce((sum, score) => sum + score, 0);
+            const maxScore = 12;
+            const percentage = (totalScore / maxScore) * 100;
+
+            let level, color, recommendations;
+
+            if (percentage <= 25) {
+                level = 'Low Stress';
+                color = 'var(--success)';
+                recommendations = 'Great job managing your stress! Continue with your current coping strategies and maintain healthy habits.';
+            } else if (percentage <= 50) {
+                level = 'Moderate Stress';
+                color = 'var(--warning)';
+                recommendations = 'You\'re experiencing some stress. Consider incorporating relaxation techniques and ensure you\'re getting enough sleep.';
+            } else if (percentage <= 75) {
+                level = 'High Stress';
+                color = 'orange';
+                recommendations = 'Your stress levels are concerning. Consider speaking with a counselor and implementing stress management techniques immediately.';
+            } else {
+                level = 'Very High Stress';
+                color = 'var(--danger)';
+                recommendations = 'Please consider seeking professional help immediately. Your campus counseling center can provide support.';
+            }
+
+            const resultsDiv = document.getElementById('stressResults');
+            const scoreDiv = document.getElementById('stressScore');
+            const recommendationsDiv = document.getElementById('stressRecommendations');
+
+            scoreDiv.innerHTML = `<h3 style="color: ${color};">${level} (${Math.round(percentage)}%)</h3>`;
+            recommendationsDiv.innerHTML = `<p><strong>Recommendations:</strong> ${recommendations}</p>`;
+
+            resultsDiv.classList.add('show');
+        }
+
+        function logSleep() {
+            const bedtime = document.getElementById('bedtime').value;
+            const waketime = document.getElementById('waketime').value;
+            const quality = document.getElementById('sleepquality').value;
+
+            if (!bedtime || !waketime || !quality) {
+                alert('Please fill in all sleep tracking fields.');
+                return;
+            }
+
+            const bedDate = new Date(`2000-01-01 ${bedtime}`);
+            let wakeDate = new Date(`2000-01-01 ${waketime}`);
+
+            if (wakeDate < bedDate) {
+                wakeDate.setDate(wakeDate.getDate() + 1);
+            }
+
+            const duration = (wakeDate - bedDate) / (1000 * 60 * 60);
+
+            const sleepData = JSON.parse(localStorage.getItem('sleepData') || '[]');
+            sleepData.push({
+                date: new Date().toLocaleDateString(),
+                bedtime: bedtime,
+                waketime: waketime,
+                duration: duration.toFixed(1),
+                quality: quality
+            });
+            localStorage.setItem('sleepData', JSON.stringify(sleepData));
+
+            alert(`Sleep logged! Duration: ${duration.toFixed(1)} hours`);
+
+            document.getElementById('bedtime').value = '';
+            document.getElementById('waketime').value = '';
+            document.getElementById('sleepquality').value = '';
+        }
+
+        function viewSleepStats() {
+            const sleepData = JSON.parse(localStorage.getItem('sleepData') || '[]');
+            if (sleepData.length === 0) {
+                alert('No sleep data yet. Start logging your sleep to see patterns!');
+                return;
+            }
+
+            const chartDiv = document.getElementById('sleepChart');
+            const dataDiv = document.getElementById('sleepData');
+
+            const avgDuration = sleepData.reduce((sum, entry) => sum + parseFloat(entry.duration), 0) / sleepData.length;
+            const avgQuality = sleepData.reduce((sum, entry) => sum + parseInt(entry.quality), 0) / sleepData.length;
+
+            dataDiv.innerHTML = `
+                <p><strong>Average Sleep Duration:</strong> ${avgDuration.toFixed(1)} hours</p>
+                <p><strong>Average Sleep Quality:</strong> ${avgQuality.toFixed(1)}/10</p>
+                <p><strong>Total Entries:</strong> ${sleepData.length}</p>
+                <p><strong>Latest Entry:</strong> ${sleepData[sleepData.length - 1].date}</p>
+            `;
+
+            chartDiv.style.display = 'block';
+        }
+
+        let timerInterval;
+        let timeLeft = 25 * 60;
+        let isRunning = false;
+
+        function updateTimerDisplay() {
+            const minutes = Math.floor(timeLeft / 60);
+            const seconds = timeLeft % 60;
+            document.getElementById('timerDisplay').textContent =
+                `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+        }
+
+        function startTimer() {
+            if (!isRunning) {
+                isRunning = true;
+                timerInterval = setInterval(() => {
+                    timeLeft--;
+                    updateTimerDisplay();
+
+                    if (timeLeft <= 0) {
+                        clearInterval(timerInterval);
+                        isRunning = false;
+                        alert('Time\'s up! Great job focusing!');
+                        timeLeft = 25 * 60;
+                        updateTimerDisplay();
+                    }
+                }, 1000);
+            }
+        }
+
+        function pauseTimer() {
+            if (isRunning) {
+                clearInterval(timerInterval);
+                isRunning = false;
+            }
+        }
+
+        function resetTimer() {
+            clearInterval(timerInterval);
+            isRunning = false;
+            timeLeft = 25 * 60;
+            updateTimerDisplay();
+        }
+
+        function setTimer(minutes) {
+            clearInterval(timerInterval);
+            isRunning = false;
+            timeLeft = minutes * 60;
+            updateTimerDisplay();
+        }
+
+        // Affirmations and achievements
+        const affirmations = [
+            "I am capable of handling whatever comes my way.",
+            "I choose to focus on what I can control.",
+            "I am worthy of love and respect.",
+            "Every challenge is an opportunity to grow.",
+            "I trust in my ability to make good decisions.",
+            "I am resilient and can overcome obstacles.",
+            "I deserve to take care of my mental health.",
+            "I am making progress, even if it's not always visible."
+        ];
+
+        function getNewAffirmation() {
+            const randomIndex = Math.floor(Math.random() * affirmations.length);
+            document.getElementById('dailyAffirmation').textContent = affirmations[randomIndex];
+        }
+
+        function addAchievement() {
+            const input = document.getElementById('achievementInput');
+            const achievement = input.value.trim();
+
+            if (achievement === '') {
+                alert('Please enter an achievement!');
+                return;
+            }
+
+            const achievementsList = document.getElementById('achievementsList');
+            const achievementElement = document.createElement('div');
+            achievementElement.style.cssText = 'background: var(--pale-blue); padding: 0.5rem; margin: 0.5rem 0; border-radius: 8px; border-left: 4px solid var(--success);';
+            achievementElement.innerHTML = `🏆 ${achievement} <small>(${new Date().toLocaleDateString()})</small>`;
+
+            achievementsList.insertBefore(achievementElement, achievementsList.firstChild);
+            input.value = '';
+
+            const achievements = JSON.parse(localStorage.getItem('achievements') || '[]');
+            achievements.unshift({ text: achievement, date: new Date().toLocaleDateString() });
+            localStorage.setItem('achievements', JSON.stringify(achievements));
+        }
+
+        let mediaRecorder;
+        let recordedChunks = [];
+        let isRecording = false;
+        let canvas, ctx;
+        let isDrawing = false;
+        let currentColor = 'black';
+
+        function openCreativeModal() {
+            document.getElementById('creativeModal').style.display = 'block';
+        }
+
+        function closeCreativeModal() {
+            document.getElementById('creativeModal').style.display = 'none';
+        }
+
+        function showCreativeSection(section) {
+            document.querySelectorAll('.creative-section').forEach(s => s.style.display = 'none');
+            document.getElementById(section + 'Section').style.display = 'block';
+
+            if (section === 'art') {
+                initCanvas();
+            }
+        }
+
+        function setWritingPrompt(prompt) {
+            document.getElementById('writingArea').value = prompt + '\n\n';
+        }
+
+        function saveWriting() {
+            const writing = document.getElementById('writingArea').value;
+            if (writing.trim()) {
+                const writings = JSON.parse(localStorage.getItem('writings') || '[]');
+                writings.push({ text: writing, date: new Date().toLocaleDateString() });
+                localStorage.setItem('writings', JSON.stringify(writings));
+                alert('Writing saved!');
+                document.getElementById('writingArea').value = '';
+            }
+        }
+
+        function toggleRecording() {
+            if (!isRecording) {
+                startRecording();
+            } else {
+                stopRecording();
+            }
+        }
+
+        function startRecording() {
+            navigator.mediaDevices.getUserMedia({ audio: true })
+                .then(stream => {
+                    mediaRecorder = new MediaRecorder(stream);
+                    mediaRecorder.ondataavailable = event => {
+                        if (event.data.size > 0) {
+                            recordedChunks.push(event.data);
+                        }
+                    };
+
+                    mediaRecorder.onstop = () => {
+                        const blob = new Blob(recordedChunks, { type: 'audio/wav' });
+                        const audioURL = URL.createObjectURL(blob);
+                        const audio = document.getElementById('audioPlayback');
+                        audio.src = audioURL;
+                        audio.style.display = 'block';
+                        recordedChunks = [];
+                    };
+
+                    mediaRecorder.start();
+                    isRecording = true;
+                    document.getElementById('recordBtn').textContent = '⏹️ Stop Recording';
+                    document.getElementById('recordingStatus').textContent = 'Recording...';
+                })
+                .catch(err => {
+                    alert('Could not access microphone: ' + err.message);
+                });
+        }
+
+        function stopRecording() {
+            if (mediaRecorder && isRecording) {
+                mediaRecorder.stop();
+                isRecording = false;
+                document.getElementById('recordBtn').textContent = '🎤 Start Recording';
+                document.getElementById('recordingStatus').textContent = 'Recording stopped. Play your recording below.';
+            }
+        }
+
+        function initCanvas() {
+            canvas = document.getElementById('artCanvas');
+            ctx = canvas.getContext('2d');
+
+            canvas.addEventListener('mousedown', startDrawing);
+            canvas.addEventListener('mousemove', draw);
+            canvas.addEventListener('mouseup', stopDrawing);
+            canvas.addEventListener('mouseout', stopDrawing);
+        }
+
+        function startDrawing(e) {
+            isDrawing = true;
+            const rect = canvas.getBoundingClientRect();
+            ctx.beginPath();
+            ctx.moveTo(e.clientX - rect.left, e.clientY - rect.top);
+        }
+
+        function draw(e) {
+            if (!isDrawing) return;
+
+            const rect = canvas.getBoundingClientRect();
+            ctx.lineWidth = 3;
+            ctx.lineCap = 'round';
+            ctx.strokeStyle = currentColor;
+            ctx.lineTo(e.clientX - rect.left, e.clientY - rect.top);
+            ctx.stroke();
+            ctx.beginPath();
+            ctx.moveTo(e.clientX - rect.left, e.clientY - rect.top);
+        }
+
+        function stopDrawing() {
+            isDrawing = false;
+            ctx.beginPath();
+        }
+
+        function setCanvasColor(color) {
+            currentColor = color;
+        }
+
+        function clearCanvas() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+        }
+
+        function saveArt() {
+            const dataURL = canvas.toDataURL();
+            const arts = JSON.parse(localStorage.getItem('arts') || '[]');
+            arts.push({ image: dataURL, date: new Date().toLocaleDateString() });
+            localStorage.setItem('arts', JSON.stringify(arts));
+            alert('Art saved!');
+        }
+
+        function showCrisisHelp() {
+            alert('🆘 CRISIS SUPPORT 🆘\n\nIf you\'re in immediate danger, call 911.\n\nNational Suicide Prevention Lifeline: 988\nCrisis Text Line: Text HOME to 741741\n\nYou are not alone. Help is available 24/7.');
+        }
+
+        // Initialize page
+        document.addEventListener('DOMContentLoaded', function () {
+            updateJournalDate();
+
+        try {
+            updateDailyMotivation();
+        } catch (error) {
+            console.warn('Daily motivation update failed:', error);
+        }
+
+        getNewAffirmation();
+        initializeMoodIntegration();
+
+        const savedAchievements = JSON.parse(localStorage.getItem('achievements') || '[]');
+        const achievementsList = document.getElementById('achievementsList');
+        if (achievementsList) {
+            savedAchievements.slice(0, 5).forEach(achievement => {
+                const achievementElement = document.createElement('div');
+                achievementElement.style.cssText = 'background: var(--pale-blue); padding: 0.5rem; margin: 0.5rem 0; border-radius: 8px; border-left: 4px solid var(--success);';
+                achievementElement.innerHTML = `🏆 ${achievement.text} <small>(${achievement.date})</small>`;
+                achievementsList.appendChild(achievementElement);
+            });
+        }
+        });
+
+        // Mood integration helpers
+        function initializeMoodIntegration() {
+            if (!window.moodStore) {
+                console.warn('Mood store not loaded, skipping mood integration');
+                showFallbackInsights();
+                return;
+            }
+
+            showMoodLoadingState();
+            window.moodStore.fetchMoodData().then(() => {
+                updateWellnessInsights();
+                hideMoodLoadingState();
+            }).catch(error => {
+                console.error('Mood initialization failed:', error);
+                showFallbackInsights();
+            });
+
+            window.moodStore.subscribe(() => {
+                updateWellnessInsights();
+            });
+        }
+
+        function showFallbackInsights() {
+            const container = document.getElementById('wellness-insights');
+            if (!container) return;
+            container.style.display = 'block';
+            container.innerHTML = `
+                <div class="container">
+                    <div class="insights-banners">
+                        <div class="insight-banner">
+                            <div class="insight-banner-icon">💡</div>
+                            <div class="insight-banner-title">Welcome to MindHeaven</div>
+                            <div>Explore calming videos, journal prompts, and self-care tools to support your wellness.</div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function showMoodLoadingState() {
+            const container = document.getElementById('wellness-insights');
+            if (!container) return;
+            container.style.display = 'block';
+            container.innerHTML = `
+                <div class="container">
+                    <div class="loading-text">
+                        <span class="loading-spinner"></span>
+                        Loading wellness insights...
+                    </div>
+                </div>
+            `;
+        }
+
+        function hideMoodLoadingState() {
+            // No-op: insights update will replace loading state.
+        }
+
+        function updateWellnessInsights() {
+            const container = document.getElementById('wellness-insights');
+            if (!container || !window.moodStore) return;
+
+            const insights = window.moodStore.getWellnessInsights();
+            if (!insights || insights.length === 0) {
+                container.style.display = 'none';
+                return;
+            }
+
+            const bannersHtml = insights.map(insight => `
+                <div class="insight-banner">
+                    <div class="insight-banner-icon">🧠</div>
+                    <div class="insight-banner-title">Wellness Insight</div>
+                    <div>${insight}</div>
+                </div>
+            `).join('');
+
+            container.style.display = 'block';
+            container.innerHTML = `
+                <div class="container">
+                    <div class="insights-banners">
+                        ${bannersHtml}
+                    </div>
+                </div>
+            `;
+        }
+
+        function toggleMoodTest() {
+            const panel = document.getElementById('moodTestPanel');
+            if (!panel) return;
+
+            if (panel.style.display === 'none' || panel.style.display === '') {
+                panel.style.display = 'block';
+                initializeMoodTest();
+            } else {
+                panel.style.display = 'none';
+                if (testMoodSubscription) {
+                    testMoodSubscription();
+                    testMoodSubscription = null;
+                }
+            }
+        }
+
+        function initializeMoodTest() {
+            const statusDiv = document.getElementById('testStatus');
+            const dataDiv = document.getElementById('testMoodData');
+            const recDiv = document.getElementById('testRecommendations');
+            if (!window.moodStore) {
+                if (statusDiv) statusDiv.textContent = '❌ Mood store failed to load';
+                return;
+            }
+
+            if (statusDiv) statusDiv.textContent = '✅ Mood store loaded successfully';
+
+            testMoodSubscription = window.moodStore.subscribe((state) => {
+                if (dataDiv) {
+                    dataDiv.innerHTML = `
+                        <h4>Mood Data</h4>
+                        <p><strong>Loading:</strong> ${state.isLoading}</p>
+                        <p><strong>Dominant Mood:</strong> ${state.dominantMood || 'None'}</p>
+                        <p><strong>Stress Level:</strong> ${state.stressLevel}/5</p>
+                        <p><strong>Mood Logs:</strong> ${state.moodData.length}</p>
+                        <p><strong>Patterns:</strong> ${state.patterns.join(', ') || 'None'}</p>
+                    `;
+                }
+                if (recDiv) {
+                    recDiv.innerHTML = `
+                        <h4>Recommendations</h4>
+                        ${state.recommendations.length > 0 ? state.recommendations.map(r => `
+                            <div style="border: 1px solid #ccc; padding: 8px; margin: 4px 0; border-radius: 4px;">
+                                <strong>${r.title}</strong> <span style="color: ${r.priority === 'urgent' ? 'red' : r.priority === 'high' ? 'orange' : 'green'};">(${r.priority})</span>
+                                <p style="margin: 4px 0; font-size: 0.9em;">${r.description}</p>
+                                <p style="margin: 4px 0; font-size: 0.8em;"><strong>Resources:</strong> ${r.resources.join(', ')}</p>
+                            </div>
+                        `).join('') : '<p>No recommendations yet. Add some mood entries!</p>'}
+                    `;
+                }
+            });
+
+            window.moodStore.fetchMoodData();
+        }
+
+        async function addTestMood(mood) {
+            if (!window.moodStore) return;
+
+            const notes = {
+                sad: 'Feeling down and need some uplifting content',
+                stressed: 'Too much academic pressure and workload',
+                anxious: 'Worried about upcoming exams and deadlines',
+                happy: 'Having a good day and feeling positive'
+            };
+
+            try {
+                await window.moodStore.addMoodEntry(mood, {
+                    note: notes[mood] || `Test entry for ${mood} mood`,
+                    source: 'test'
+                });
+            } catch (error) {
+                console.error('Failed to add test mood:', error);
+            }
+        }
+
+        function clearTestData() {
+            if (!window.moodStore) return;
+
+            localStorage.removeItem('journalEntries');
+            window.moodStore.fetchMoodData();
+        }
+
+        // Video loading helpers
+        function handleVideoError(iframe) {
+            console.warn('Video failed to load:', iframe.src);
+            const fallback = iframe.nextElementSibling;
+            if (fallback && fallback.classList.contains('video-fallback')) {
+                fallback.style.display = 'block';
+            }
+        }
+
+        // Initialize video error handling
+        document.addEventListener('DOMContentLoaded', function() {
+            // Add error handling to all video iframes
+            const iframes = document.querySelectorAll('.video-embed');
+            iframes.forEach(iframe => {
+                iframe.onerror = () => handleVideoError(iframe);
+                iframe.onload = () => console.log('Video loaded successfully:', iframe.src);
+            });
+        });
+    </script>
+</body>
+
+</html>

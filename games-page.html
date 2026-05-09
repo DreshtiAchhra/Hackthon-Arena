@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Game Showcase</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+            min-height: 100vh;
+            padding: 2rem;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            text-align: center;
+            color: #1e40af;
+            font-size: 2.5rem;
+            margin-bottom: 3rem;
+            font-weight: 700;
+        }
+
+        .games-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 3rem;
+            justify-items: center;
+        }
+
+        .game-card {
+            background: white;
+            border-radius: 16px;
+            padding: 2rem;
+            box-shadow: 0 10px 25px rgba(30, 64, 175, 0.1);
+            transition: all 0.3s ease;
+            max-width: 450px;
+            width: 100%;
+            text-align: center;
+        }
+
+        .game-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px rgba(30, 64, 175, 0.15);
+        }
+
+        .game-image {
+            width: 100%;
+            height: 250px;
+            background: #e2e8f0;
+            border-radius: 12px;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            color: #64748b;
+            border: 2px solid #cbd5e1;
+        }
+
+        .breathquest-image {
+            background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+            color: white;
+        }
+
+        .smashmoji-image {
+            background: linear-gradient(135deg, #6366f1 0%, #4338ca 100%);
+            color: white;
+        }
+
+        .game-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #1e40af;
+            margin-bottom: 1rem;
+        }
+
+        .game-description {
+            color: #64748b;
+            font-size: 1rem;
+            line-height: 1.6;
+            margin-bottom: 2rem;
+            height: 3.2rem;
+        }
+
+        .play-button {
+            background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+            color: white;
+            border: none;
+            padding: 1rem 2.5rem;
+            font-size: 1.1rem;
+            font-weight: 600;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .play-button:hover {
+            background: linear-gradient(135deg, #1d4ed8 0%, #1e3a8a 100%);
+            transform: scale(1.05);
+        }
+
+        .play-button:active {
+            transform: scale(0.98);
+        }
+
+        @media (max-width: 768px) {
+            .games-grid {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+            
+            h1 {
+                font-size: 2rem;
+                margin-bottom: 2rem;
+            }
+            
+            .game-card {
+                padding: 1.5rem;
+            }
+        }
+        a
+        {
+            text-decoration: none;
+            color: white;
+
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Featured Games</h1>
+        
+        <div class="games-grid">
+            <!-- BreathQuest Game -->
+            <div class="game-card">
+                <div class="game-image breathquest-image">
+                    🌬️⚔️
+                </div>
+                <h2 class="game-title">BreathQuest</h2>
+                <p class="game-description">
+                    Master the art of breathing to unlock mystical powers.<br>
+                    Embark on an epic adventure where every breath matters.
+                </p>
+                <button class="play-button"><a href="games/index.html">Play Now</a></button>
+            </div>
+
+            <!-- SmashMoji Game -->
+            <div class="game-card">
+                <div class="game-image smashmoji-image">
+                    💥😊
+                </div>
+                <h2 class="game-title">SmashMoji</h2>
+                <p class="game-description">
+                    Smash colorful emojis in this fast-paced puzzle game.<br>
+                    Match, crush, and score big in emoji-filled mayhem!
+                </p>
+                <button class="play-button"><a href="/games/smashmoji.html">Play Now</a></button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        
+        // Add some interactive effects
+        document.addEventListener('DOMContentLoaded', function() {
+            const gameCards = document.querySelectorAll('.game-card');
+            
+            gameCards.forEach(card => {
+                card.addEventListener('mouseenter', function() {
+                    this.style.borderLeft = '4px solid #3b82f6';
+                });
+                
+                card.addEventListener('mouseleave', function() {
+                    this.style.borderLeft = 'none';
+                });
+            });
+
+            //  Added click outside popup to close functionality
+            const popupOverlay = document.getElementById('welcomePopup');
+            popupOverlay.addEventListener('click', function(e) {
+                if (e.target === popupOverlay) {
+                    popupOverlay.classList.remove('show');
+                }
+            });
+        });
+    </script>
+</body>
+</html>

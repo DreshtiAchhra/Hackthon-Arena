@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>😊 Smashmoji</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body{
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: linear-gradient(135deg,#3b82f6 0%,#1e40af 100%);
+      min-height: 100vh; display:flex; align-items:center; justify-content:center; padding:20px;
+    }
+    .game-container{
+      background:#f8fafc; border-radius:20px; padding:24px; box-shadow:0 20px 40px rgba(0,0,0,0.1);
+      max-width:520px; width:100%;
+    }
+    .header{ text-align:center; margin-bottom:20px; }
+    .title{ font-size:28px; font-weight:700; color:#2563eb; margin-bottom:12px; }
+    .stats{ display:flex; justify-content:space-between; font-size:14px; color:#64748b; }
+    .stat-value{ font-weight:600; color:#334155; }
+    .score-value{ color:#2563eb; animation:pulse .5s ease-in-out; }
+    .game-grid{
+      display:grid; grid-template-columns:repeat(8,1fr); gap:6px;
+      background:#e2e8f0; padding:12px; border-radius:12px; margin-bottom:16px; user-select:none;
+      touch-action: none;
+    }
+    .cell{
+      width:50px; height:50px; background:#fff; border-radius:8px; display:flex; align-items:center;
+      justify-content:center; font-size:28px; cursor:pointer; transition:all .12s ease; border:2px solid transparent;
+      user-select: none;
+    }
+    .cell:hover{ background:#f1f5f9; transform:scale(1.03); }
+    .cell.selected{
+      background:#dbeafe; border-color:#3b82f6; transform:scale(1.08); box-shadow:0 4px 12px rgba(59,130,246,.25);
+    }
+
+    /* Crush animation */
+    @keyframes explode {
+      0%   { transform: scale(1); opacity: 1; }
+      40%  { transform: scale(1.25); opacity: 0.8; }
+      70%  { transform: scale(0.6); opacity: 0.45; }
+      100% { transform: scale(0); opacity: 0; }
+    }
+    .cell.exploding { animation: explode .45s ease-out forwards; }
+
+    /* New emoji drop */
+    @keyframes dropIn {
+      0%   { transform: translateY(-40px); opacity: 0; }
+      60%  { transform: translateY(8px); opacity: 1; }
+      100% { transform: translateY(0); opacity: 1; }
+    }
+    .cell.new { animation: dropIn .42s cubic-bezier(.2,.8,.2,1); }
+
+    .controls{ display:flex; gap:8px; margin-bottom:16px; }
+    .btn{ padding:12px 16px; border:none; border-radius:8px; font-weight:600; cursor:pointer; transition:all .12s ease; font-size:14px; }
+    .btn-primary{ background:#2563eb; color:#fff; flex:1; }
+    .btn-primary:hover:not(:disabled){ background:#1d4ed8; transform:translateY(-2px); }
+    .btn-secondary{ background:#e2e8f0; color:#64748b; padding:12px; }
+    .btn-secondary:hover:not(:disabled){ background:#cbd5e1; }
+    .btn:disabled{ opacity:.5; cursor:not-allowed; }
+
+    .instructions{ background:#f1f5f9; padding:12px; border-radius:8px; text-align:center; font-size:13px; color:#394a5a; margin-bottom:16px; }
+    .game-over{ background:#fef2f2; border:2px solid #fecaca; padding:20px; border-radius:12px; text-align:center; }
+    .game-over h2{ color:#dc2626; font-size:20px; margin-bottom:8px; }
+    .drag-selecting{ cursor:crosshair; }
+
+    @keyframes pulse{ 0%,100%{ transform:scale(1); } 50%{ transform:scale(1.05); } }
+    @keyframes bounce-in{ 0%{ transform:scale(.92); opacity:.85 } 100%{ transform:scale(1); opacity:1 } }
+    .cell:not(.exploding):not(.new){ animation:bounce-in .22s ease-out; }
+
+#toast {
+      visibility: hidden;
+      min-width: 320px;
+      background: #f5f7fa; /* Light gray background */
+      color: #1a73e8;      /* Nice blue text */
+      text-align: center;
+      border-radius: 12px;
+      padding: 16px;
+      position: fixed;
+      top: 30px;
+      left: 50%;
+      transform: translateX(-50%) translateY(-20px);
+      font-size: 18px;
+      font-weight: bold;
+      border: 2px solid #1a73e8; /* Blue border */
+      box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+      opacity: 0;
+      transition: opacity 0.5s, transform 0.5s;
+      z-index: 1000;
+    }
+
+    #toast.show {
+      visibility: visible;
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+  </style>
+</head>
+<body>
+ <div id="toast">🎮 Welcome to the Game!!</div>
+
+  <div class="game-container">
+    <div class="header">
+      <h1 class="title">😊 Smashmoji</h1>
+      <div class="stats">
+        <div>Level: <span class="stat-value" id="level">1</span></div>
+        <div>Score: <span class="score-value" id="score">0</span></div>
+        <div>Moves: <span class="stat-value" id="moves">30</span></div>
+      </div>
+    </div>
+
+    <div class="game-grid" id="gameGrid" role="application" aria-label="Emoji Crush Grid"></div>
+
+    <div class="controls">
+      <!-- Auto-crush on release is enabled. Buttons remain for manual control -->
+      <button class="btn btn-primary" id="crushBtn" disabled>Crush (0)</button>
+      <button class="btn btn-secondary" id="clearBtn" disabled>Clear</button>
+    </div>
+
+    <div class="instructions" id="instructions">
+      <p><strong>Click and drag</strong> </p>
+    </div>
+
+    <div class="game-over" id="gameOver" style="display:none;">
+      <h2>Game Over!</h2>
+      <p>Final Score: <span id="finalScore">0</span></p>
+      <button class="btn btn-primary" onclick="resetGame()">Play Again</button>
+    </div>
+  </div>
+
+  <script>
+    const EMOJIS = ['😂','🤪','😠','🤡','😍','🤩','😭','👻'];
+    const GRID_SIZE = 8;
+    const MIN_MATCH = 3;
+
+    let grid = [];
+    let score = 0;
+    let selectedCells = [];
+    let isProcessing = false;
+    let moves = 30;
+    let level = 1;
+    let gameOver = false;
+    let isDragSelecting = false;
+    let isMouseDown = false;
+    let dragStartEmoji = null;
+
+    // --- Initialize / Render ---
+    function initializeGrid() {
+      grid = [];
+      for (let r = 0; r < GRID_SIZE; r++) {
+        grid[r] = [];
+        for (let c = 0; c < GRID_SIZE; c++) {
+          grid[r][c] = {
+            emoji: EMOJIS[Math.floor(Math.random() * EMOJIS.length)],
+            id: `${r}-${c}`,
+            isSelected: false,
+            isMatched: false,
+            isExploding: false,
+            isNew: false
+          };
+        }
+      }
+      renderGrid();
+    }
+
+    function renderGrid() {
+      const gameGrid = document.getElementById('gameGrid');
+      gameGrid.innerHTML = '';
+
+      for (let row = 0; row < GRID_SIZE; row++) {
+        for (let col = 0; col < GRID_SIZE; col++) {
+          const cell = grid[row][col];
+          const cellEl = document.createElement('div');
+          cellEl.className = 'cell';
+          cellEl.textContent = cell.emoji || '';
+          cellEl.dataset.row = row;
+          cellEl.dataset.col = col;
+          cellEl.setAttribute('aria-label', `row ${row+1} col ${col+1}`);
+
+          if (cell.isSelected) cellEl.classList.add('selected');
+          if (cell.isExploding) cellEl.classList.add('exploding');
+          if (cell.isNew) { cellEl.classList.add('new'); cell.isNew = false; }
+
+          // start drag on mousedown / touchstart
+          cellEl.addEventListener('mousedown', (e) => {
+            e.preventDefault();
+            handleDragStart(row, col);
+          });
+
+          cellEl.addEventListener('mouseenter', (e) => {
+            if (isDragSelecting && isMouseDown) handleMouseEnter(row, col);
+          });
+
+          // Basic touch support: start + move
+          cellEl.addEventListener('touchstart', (e) => {
+            e.preventDefault();
+            handleDragStart(row, col);
+          }, { passive: false });
+
+          cellEl.addEventListener('touchmove', (e) => {
+            // find touch point element and trigger enter-like behavior
+            const touch = e.touches[0];
+            const target = document.elementFromPoint(touch.clientX, touch.clientY);
+            if (target && target.dataset && target.dataset.row !== undefined) {
+              const r = parseInt(target.dataset.row, 10);
+              const c = parseInt(target.dataset.col, 10);
+              if (isDragSelecting) handleMouseEnter(r, c);
+            }
+          }, { passive: false });
+
+          gameGrid.appendChild(cellEl);
+        }
+      }
+    }
+
+    // --- Selection flow ---
+    function handleDragStart(row, col) {
+      if (isProcessing || gameOver) return;
+
+      clearSelection(); // start fresh selection
+      isDragSelecting = true;
+      isMouseDown = true;
+      dragStartEmoji = grid[row][col].emoji;
+      selectCell(row, col);
+      document.body.classList.add('drag-selecting');
+
+      // end drag anywhere on mouseup / touchend
+      const endDrag = () => {
+        isMouseDown = false;
+        endDragSelection();
+        document.removeEventListener('mouseup', endDrag);
+        document.removeEventListener('mouseleave', endDrag);
+        document.removeEventListener('touchend', endDrag);
+        document.body.classList.remove('drag-selecting');
+      };
+
+      document.addEventListener('mouseup', endDrag);
+      document.addEventListener('mouseleave', endDrag);
+      document.addEventListener('touchend', endDrag);
+    }
+
+    function handleMouseEnter(row, col) {
+      if (!isDragSelecting || !isMouseDown || isProcessing || gameOver) return;
+      const cell = grid[row][col];
+
+      // If already selected -> allow backtrack (undo last) if it's the penultimate cell
+      if (cell.isSelected) {
+        const lastIndex = selectedCells.length - 1;
+        const penIndex = selectedCells.length - 2;
+        if (penIndex >= 0) {
+          const pen = selectedCells[penIndex];
+          if (pen.row === row && pen.col === col) {
+            // undo last selection
+            const last = selectedCells.pop();
+            grid[last.row][last.col].isSelected = false;
+            renderGrid();
+            updateControls();
+          }
+        }
+        return;
+      }
+
+      // emoji must match initial dragged emoji
+      if (cell.emoji !== dragStartEmoji) return;
+
+      // adjacency must be to the LAST selected cell (so selection is a continuous path)
+      if (selectedCells.length === 0) {
+        selectCell(row, col);
+        return;
+      }
+
+      const last = selectedCells[selectedCells.length - 1];
+      const rowDiff = Math.abs(last.row - row);
+      const colDiff = Math.abs(last.col - col);
+      if ((rowDiff <= 1 && colDiff <= 1) && !(rowDiff === 0 && colDiff === 0)) {
+      selectCell(row, col);
+        }
+
+      // else ignore (not adjacent)
+    }
+
+    function selectCell(row, col) {
+      const key = `${row}-${col}`;
+      const exists = selectedCells.some(s => `${s.row}-${s.col}` === key);
+      if (!exists) {
+        selectedCells.push({ row, col });
+        grid[row][col].isSelected = true;
+        renderGrid();
+        updateControls();
+      }
+    }
+
+    function clearSelection() {
+      selectedCells.forEach(({ row, col }) => {
+        if (grid[row] && grid[row][col]) grid[row][col].isSelected = false;
+      });
+      selectedCells = [];
+      renderGrid();
+      updateControls();
+    }
+
+    function endDragSelection() {
+      isDragSelecting = false;
+      dragStartEmoji = null;
+      document.body.classList.remove('drag-selecting');
+
+      // Auto-crush on release if selection valid
+      if (selectedCells.length >= MIN_MATCH) {
+        processSelection();
+      } else {
+        clearSelection();
+      }
+    }
+
+    // --- Crush & gravity ---
+    function processSelection() {
+      if (selectedCells.length < MIN_MATCH || isProcessing) return;
+
+      isProcessing = true;
+      moves--;
+      updateStats();
+
+      // mark selected cells as exploding/matched
+      selectedCells.forEach(({ row, col }) => {
+        grid[row][col].isExploding = true;
+        grid[row][col].isMatched = true;
+      });
+
+      const points = selectedCells.length * 1 * level;
+      score += points;
+      updateStats();
+      renderGrid();
+
+      // wait for explosion animation, then gravity/drop
+      setTimeout(() => {
+        applyGravity();
+        // after drop animations, check for auto matches
+        setTimeout(() => {
+          checkForAutoMatches();
+        }, 450); // allow drop animation to finish
+      }, 460); // match explode duration
+      selectedCells = [];
+      updateControls();
+    }
+
+    function applyGravity() {
+      for (let col = 0; col < GRID_SIZE; col++) {
+        const column = [];
+        for (let row = GRID_SIZE - 1; row >= 0; row--) {
+          if (!grid[row][col].isMatched) {
+            column.push({
+              ...grid[row][col],
+              isExploding: false,
+              isMatched: false,
+              isSelected: false
+            });
+          }
+        }
+
+        while (column.length < GRID_SIZE) {
+          column.push({
+            emoji: EMOJIS[Math.floor(Math.random() * EMOJIS.length)],
+            id: `${Math.random()}`,
+            isSelected: false,
+            isMatched: false,
+            isExploding: false,
+            isNew: true
+          });
+        }
+
+        for (let row = 0; row < GRID_SIZE; row++) {
+          grid[GRID_SIZE - 1 - row][col] = column[row];
+        }
+      }
+      renderGrid();
+    }
+
+    function checkForAutoMatches() {
+      const matches = findMatches();
+      if (matches.length > 0) {
+        // mark them exploding/matched
+        matches.forEach(({ row, col }) => {
+          grid[row][col].isMatched = true;
+          grid[row][col].isExploding = true;
+        });
+        const points = matches.length * 1 * level;
+        score += points;
+        updateStats();
+        renderGrid();
+
+        setTimeout(() => {
+          applyGravity();
+          setTimeout(() => {
+            checkForAutoMatches();
+          }, 450);
+        }, 460);
+      } else {
+        isProcessing = false;
+        checkGameOver();
+      }
+    }
+
+    function findMatches() {
+      const matches = [];
+      // row-wise
+      for (let r = 0; r < GRID_SIZE; r++) {
+        let count = 1;
+        let current = grid[r][0].emoji;
+        for (let c = 1; c < GRID_SIZE; c++) {
+          if (grid[r][c].emoji === current) count++;
+          else {
+            if (count >= MIN_MATCH) {
+              for (let k = c - count; k < c; k++) matches.push({ row: r, col: k });
+            }
+            count = 1;
+            current = grid[r][c].emoji;
+          }
+        }
+        if (count >= MIN_MATCH) {
+          for (let k = GRID_SIZE - count; k < GRID_SIZE; k++) matches.push({ row: r, col: k });
+        }
+      }
+      // col-wise
+      for (let c = 0; c < GRID_SIZE; c++) {
+        let count = 1;
+        let current = grid[0][c].emoji;
+        for (let r = 1; r < GRID_SIZE; r++) {
+          if (grid[r][c].emoji === current) count++;
+          else {
+            if (count >= MIN_MATCH) {
+              for (let k = r - count; k < r; k++) matches.push({ row: k, col: c });
+            }
+            count = 1;
+            current = grid[r][c].emoji;
+          }
+        }
+        if (count >= MIN_MATCH) {
+          for (let k = GRID_SIZE - count; k < GRID_SIZE; k++) matches.push({ row: k, col: c });
+        }
+      }
+      return matches;
+    }
+
+    // --- UI helpers ---
+    function updateControls() {
+      const crushBtn = document.getElementById('crushBtn');
+      const clearBtn = document.getElementById('clearBtn');
+      crushBtn.disabled = selectedCells.length < MIN_MATCH || isProcessing;
+      clearBtn.disabled = selectedCells.length === 0 || isProcessing;
+      crushBtn.textContent = `Crush (${selectedCells.length})`;
+    }
+
+    function updateStats() {
+      document.getElementById('score').textContent = score;
+      document.getElementById('moves').textContent = moves;
+      document.getElementById('level').textContent = level;
+      if (score > 0 && score % 1000 === 0) {
+        level++; moves += 5;
+      }
+    }
+
+    function checkGameOver() {
+      if (moves <= 0) {
+        gameOver = true;
+        document.getElementById('finalScore').textContent = score;
+        document.getElementById('gameOver').style.display = 'block';
+      }
+    }
+
+    function clearSelectionButton() {
+      // allow manual clear
+      clearSelection();
+    }
+
+    function resetGame() {
+      score = 0; moves = 30; level = 1; gameOver = false;
+      selectedCells = []; isProcessing = false; isDragSelecting = false; isMouseDown = false; dragStartEmoji = null;
+      document.getElementById('gameOver').style.display = 'none';
+      document.body.classList.remove('drag-selecting');
+      updateStats(); initializeGrid(); updateControls();
+    }
+
+    // --- wire buttons ---
+    document.getElementById('crushBtn').addEventListener('click', processSelection);
+    document.getElementById('clearBtn').addEventListener('click', clearSelection);
+
+    // --- start ---
+    initializeGrid();
+    updateStats();
+    updateControls();
+    //popup js  
+    window.addEventListener("load", () => {
+      const toast = document.getElementById("toast");
+      toast.classList.add("show");
+
+      // Hide after 3 seconds
+      setTimeout(() => {
+        toast.classList.remove("show");
+      }, 4000);
+    });
+  </script>
+</body>
+</html>

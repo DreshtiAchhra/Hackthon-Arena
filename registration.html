@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Mental Health Awareness - Registration</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #ffffff;
+      color: #333;
+    }
+
+    .container {
+      width: 50%;
+      margin: 25.84px auto;
+      background: #e6f3ff;
+      color: #333;
+      border-radius: 15px;
+      padding: 30px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    }
+
+    h2 {
+      text-align: center;
+      margin-bottom: 20px;
+      color: #3a6ea5;
+    }
+
+    .step {
+      display: none;
+    }
+
+    .step.active {
+      display: block;
+    }
+
+    label {
+      display: block;
+      margin: 10px 0 5px;
+      font-weight: bold;
+    }
+
+    input,
+    select {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #cce0ff;
+      border-radius: 8px;
+      margin-bottom: 15px;
+      background: #ffffff;
+      color: #000;
+    }
+
+    .buttons {
+      display: flex;
+      justify-content: space-between;
+    }
+
+    button {
+      background: #3a6ea5;
+      color: white;
+      border: none;
+      padding: 12px 25px;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: #274d74;
+    }
+
+    .progressbar {
+      display: flex;
+      justify-content: space-between;
+      counter-reset: step;
+      margin-bottom: 30px;
+    }
+
+    .progressbar li {
+      list-style-type: none;
+      width: 100%;
+      text-align: center;
+      position: relative;
+      color: #bbb;
+    }
+
+    .progressbar li::before {
+      content: counter(step);
+      counter-increment: step;
+      width: 30px;
+      height: 30px;
+      line-height: 30px;
+      border: 2px solid #bbb;
+      display: inline-block;
+      border-radius: 50%;
+      background: #fff;
+      color: #000;
+    }
+
+    .progressbar li.active {
+      color: #3a6ea5;
+    }
+
+    .progressbar li.active::before {
+      border-color: #3a6ea5;
+    }
+
+    .progressbar li::after {
+      content: '';
+      position: absolute;
+      width: 100%;
+      height: 2px;
+      background: #bbb;
+      top: 15px;
+      left: -50%;
+      z-index: -1;
+    }
+
+    .progressbar li:first-child::after {
+      content: none;
+    }
+
+    .progressbar li.active+li::after {
+      background: #3a6ea5;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="container">
+    <h2>Mental Health & Awareness - Registration</h2>
+    <ul class="progressbar">
+      <li class="active">Basic + Personal Info</li>
+      <li>Preferences</li>
+      <li>Confirmation</li>
+    </ul>
+
+    <!-- Step 1 + 2 -->
+    <div class="step active">
+      <label>Email</label>
+      <input type="email" placeholder="Enter your email" id="email" required>
+
+      <label>Education</label>
+      <select id="edu" required>
+        <option value="">Select</option>
+        <option>Primary</option>
+        <option>Middle School</option>
+        <option>Secondary/High School</option>
+        <option>Post Graduate</option>
+        <option>Graduate</option>
+        <option>Master's</option>
+        <option>Other</option>
+      </select>
+
+      <label>Name</label>
+      <input type="text" placeholder="Enter your full name" required id="fullName">
+
+      <label>Age</label>
+      <input type="number" placeholder="Enter your age" required id="age">
+
+      <label>Gender</label>
+      <select id="gender" required>
+        <option value="">Select</option>
+        <option>Male</option>
+        <option>Female</option>
+        <option>Other</option>
+      </select>
+    </div>
+
+    <!-- Step 3 -->
+    <div class="step">
+      <label>Stress Level (1-10)</label>
+      <input type="number" min="1" max="10" placeholder="Rate your stress" id="stressLevel">
+
+      <label>Sleep Tracking</label>
+      <select id="sleepTracking">
+        <option value="">Select</option>
+        <option>Yes, I want to opt-in</option>
+        <option>No, not now</option>
+      </select>
+
+      <label>Comfort with Support</label>
+      <select id="support">
+        <option value="">Select</option>
+        <option>Chat</option>
+        <option>Voice Call</option>
+        <option>Video Call</option>
+        <option>Messages</option>
+      </select>
+      
+      <label>Data Collection Consent</label>
+      <select id="data">
+        <option value="">Select</option>
+        <option>Yes</option>
+        <option>No</option>
+      </select>
+    </div>
+
+    <!-- Step 4 -->
+    <div class="step">
+      <h3>Please confirm your information and submit</h3>
+      <p>After submission you will be redirected to your dashboard.</p>
+    </div>
+
+    <div class="buttons">
+      <button id="prevBtn" onclick="nextPrev(-1)">Previous</button>
+      <button id="nextBtn" onclick="nextPrev(1)">Next</button>
+    </div>
+  </div>
+
+  <script>
+    let currentStep = 0;
+    showStep(currentStep);
+
+    function showStep(n) {
+      let steps = document.getElementsByClassName("step");
+      steps[n].style.display = "block";
+
+      document.getElementById("prevBtn").style.display = n === 0 ? "none" : "inline-block";
+      document.getElementById("nextBtn").innerHTML = (n === (steps.length - 1)) ? "Submit" : "Next";
+
+      updateProgressbar(n);
+    }
+
+    function nextPrev(n) {
+      let steps = document.getElementsByClassName("step");
+
+      if (n === 1) {
+        let currentInputs = steps[currentStep].querySelectorAll("input, select");
+        for (let input of currentInputs) {
+          if (!input.value) {
+            alert("⚠️ Please fill all required fields before proceeding.");
+            return; // stop if any field is empty
+          }
+        }
+      }
+
+      // When user submits on last step
+      if (currentStep + n >= steps.length) {
+        // Collect all values
+        let sleep = document.getElementById('sleepTracking').value;
+        if (sleep == "Yes, I want to opt-in"){
+          sleep = true;
+        }
+        else{
+          sleep = false
+        }
+
+          const userData = {
+            email: document.getElementById('email').value,
+            education: document.getElementById('edu').value,
+            fullName: document.getElementById('fullName').value,
+            age: document.getElementById('age').value,
+            gender: document.getElementById('gender').value,
+            stressLevel: document.getElementById('stressLevel').value,
+            sleepTracking: sleep,
+            support: document.getElementById('support').value,
+            registrationDate: new Date().toLocaleDateString()
+          };
+
+        console.log("Saving to localStorage:", userData);
+        localStorage.setItem('userData', JSON.stringify(userData));
+        console.log("Saved. Current localStorage:", localStorage.getItem('userData'));
+
+
+
+        alert("Form submitted successfully! Redirecting to main page...");
+        window.location.href = "user-profile.html";
+        return false; // exit function
+      }
+
+      // Hide current step AFTER checking for submit
+      steps[currentStep].style.display = "none";
+      currentStep += n;
+      showStep(currentStep);
+    }
+
+    function updateProgressbar(n) {
+      let progressItems = document.querySelectorAll(".progressbar li");
+      progressItems.forEach((item, index) => {
+        item.classList.remove("active");
+        if (index <= n) item.classList.add("active");
+      });
+    }
+  </script>
+
+</body>
+
+</html>

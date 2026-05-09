@@ -1,0 +1,172 @@
+/* Floating Widget Container */
+#emp-chat-widget-container {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 10000;
+    font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Chat Button */
+#emp-chat-button {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #007BFF, #00C6FF);
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    box-shadow: 0 4px 15px rgba(0, 123, 255, 0.4);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+#emp-chat-button:hover {
+    transform: scale(1.05);
+    box-shadow: 0 6px 20px rgba(0, 123, 255, 0.6);
+}
+
+#emp-chat-button svg {
+    width: 30px;
+    height: 30px;
+    fill: currentColor;
+}
+
+/* Chat Window */
+#emp-chat-window {
+    display: none;
+    flex-direction: column;
+    width: 350px;
+    height: 500px;
+    background: white;
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    overflow: hidden;
+    position: absolute;
+    bottom: 80px;
+    right: 0;
+    animation: emp-slide-up 0.3s ease;
+}
+
+#emp-chat-window.open {
+    display: flex;
+}
+
+@keyframes emp-slide-up {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Header */
+#emp-chat-header {
+    background: linear-gradient(135deg, #007BFF, #00C6FF);
+    color: white;
+    padding: 15px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-weight: bold;
+}
+
+#emp-close-btn {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 20px;
+    cursor: pointer;
+}
+
+/* Body */
+#emp-chat-body {
+    flex: 1;
+    padding: 15px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    background: #F4F7F6;
+}
+
+.emp-message {
+    max-width: 80%;
+    padding: 10px 15px;
+    border-radius: 15px;
+    font-size: 14px;
+    line-height: 1.4;
+}
+
+.emp-message.user {
+    align-self: flex-end;
+    background: #007BFF;
+    color: white;
+    border-bottom-right-radius: 2px;
+}
+
+.emp-message.bot {
+    align-self: flex-start;
+    background: white;
+    color: #333;
+    border-bottom-left-radius: 2px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+}
+
+.emp-metrics {
+    font-size: 11px;
+    color: #888;
+    margin-top: 5px;
+    margin-bottom: 10px;
+}
+
+.emp-intervention {
+    color: #D9534F;
+    font-weight: bold;
+    font-size: 12px;
+    margin-top: 5px;
+    margin-bottom: 10px;
+}
+
+/* Input Area */
+#emp-chat-input-container {
+    display: flex;
+    padding: 10px;
+    background: white;
+    border-top: 1px solid #E0E0E0;
+}
+
+#emp-chat-input {
+    flex: 1;
+    border: none;
+    padding: 10px;
+    border-radius: 20px;
+    background: #F4F7F6;
+    outline: none;
+}
+
+#emp-send-btn {
+    background: #007BFF;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    margin-left: 10px;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: background 0.2s;
+}
+
+#emp-send-btn:hover {
+    background: #0056b3;
+}
+
+#emp-typing-indicator {
+    align-self: flex-start;
+    color: #888;
+    font-size: 12px;
+    display: none;
+    margin-left: 15px;
+    margin-bottom: 10px;
+}

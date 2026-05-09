@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mood Integration Test</title>
+</head>
+<body>
+    <h1>Mood Integration Test</h1>
+    <div id="status">Loading mood store...</div>
+    <div id="mood-data"></div>
+    <div id="recommendations"></div>
+
+    <script src="mood-store.js"></script>
+    <script>
+        // Test the mood integration
+        document.addEventListener('DOMContentLoaded', async function() {
+            const statusDiv = document.getElementById('status');
+            const dataDiv = document.getElementById('mood-data');
+            const recDiv = document.getElementById('recommendations');
+
+            if (!window.moodStore) {
+                statusDiv.textContent = '❌ Mood store failed to load';
+                return;
+            }
+
+            statusDiv.textContent = '✅ Mood store loaded successfully';
+
+            // Subscribe to changes
+            window.moodStore.subscribe((state) => {
+                dataDiv.innerHTML = `
+                    <h2>Mood Data</h2>
+                    <p>Loading: ${state.isLoading}</p>
+                    <p>Dominant Mood: ${state.dominantMood || 'None'}</p>
+                    <p>Stress Level: ${state.stressLevel}</p>
+                    <p>Mood Logs: ${state.moodData.length}</p>
+                    <p>Patterns: ${state.patterns.join(', ') || 'None'}</p>
+                `;
+
+                recDiv.innerHTML = `
+                    <h2>Recommendations</h2>
+                    ${state.recommendations.map(r => `
+                        <div style="border: 1px solid #ccc; padding: 10px; margin: 5px;">
+                            <strong>${r.title}</strong> (${r.priority})
+                            <p>${r.description}</p>
+                            <p>Resources: ${r.resources.join(', ')}</p>
+                        </div>
+                    `).join('')}
+                `;
+            });
+
+            // Add some test mood data
+            await window.moodStore.addMoodEntry('sad', { note: 'Feeling down today' });
+            await window.moodStore.addMoodEntry('stressed', { note: 'Too much work' });
+            await window.moodStore.addMoodEntry('anxious', { note: 'Worried about exams' });
+
+            // Fetch data
+            await window.moodStore.fetchMoodData();
+        });
+    </script>
+</body>
+</html>
